@@ -1,4 +1,4 @@
-// AutoInitializer.cs - Bootstraps the game automatically on Play (3D Version)
+// AutoInitializer.cs - Bootstraps the game automatically on Play (3D Version - URP Compatible)
 // Location: Assets/_HoldTheLine/Scripts/Core/
 // No need to attach - runs automatically via RuntimeInitializeOnLoadMethod
 
@@ -14,10 +14,12 @@ namespace HoldTheLine
     /// - X axis = horizontal (player left/right movement)
     /// - Z axis = depth (down the screen - zombies move in -Z direction)
     /// - Y axis = height (minimal use, camera looks down -Y)
+    ///
+    /// NOTE: Uses URP shaders for Unity 6 / Universal Render Pipeline compatibility.
     /// </summary>
     public static class AutoInitializer
     {
-        private static Material defaultMaterial;
+        private static Shader urpShader;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Initialize()
@@ -29,14 +31,19 @@ namespace HoldTheLine
                 return;
             }
 
-            Debug.Log("[AutoInitializer] Setting up 3D game...");
+            Debug.Log("[AutoInitializer] Setting up 3D game (URP)...");
             SetupGame();
         }
 
         private static void SetupGame()
         {
-            // Create default material for 3D objects
-            defaultMaterial = new Material(Shader.Find("Standard"));
+            // Find URP shader - try multiple options for compatibility
+            urpShader = FindURPShader();
+
+            if (urpShader == null)
+            {
+                Debug.LogError("[AutoInitializer] Could not find URP shader! Objects will be pink.");
+            }
 
             // Configure camera for top-down 3D
             ConfigureCamera();
@@ -58,7 +65,66 @@ namespace HoldTheLine
             var starter = new GameObject("GameStarter").AddComponent<GameStarter>();
             starter.StartCoroutine(starter.StartGameDelayed());
 
-            Debug.Log("[AutoInitializer] 3D Game setup complete!");
+            Debug.Log("[AutoInitializer] 3D Game setup complete (URP)!");
+        }
+
+        /// <summary>
+        /// Find a working URP shader with multiple fallbacks
+        /// </summary>
+        private static Shader FindURPShader()
+        {
+            // Try URP Unlit first (simplest, works well for flat colors)
+            Shader shader = Shader.Find("Universal Render Pipeline/Unlit");
+            if (shader != null) return shader;
+
+            // Try URP Lit
+            shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (shader != null) return shader;
+
+            // Try URP Simple Lit
+            shader = Shader.Find("Universal Render Pipeline/Simple Lit");
+            if (shader != null) return shader;
+
+            // Try legacy unlit as last resort
+            shader = Shader.Find("Unlit/Color");
+            if (shader != null) return shader;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Create a URP-compatible material with the given color
+        /// </summary>
+        private static Material CreateURPMaterial(Color color)
+        {
+            if (urpShader == null)
+            {
+                urpShader = FindURPShader();
+            }
+
+            Material mat;
+            if (urpShader != null)
+            {
+                mat = new Material(urpShader);
+            }
+            else
+            {
+                // Fallback - will be pink but at least won't crash
+                mat = new Material(Shader.Find("Hidden/InternalErrorShader"));
+                Debug.LogWarning("[AutoInitializer] Using fallback shader - material will be pink!");
+            }
+
+            // Set color - URP uses _BaseColor, legacy uses _Color
+            if (mat.HasProperty("_BaseColor"))
+            {
+                mat.SetColor("_BaseColor", color);
+            }
+            else if (mat.HasProperty("_Color"))
+            {
+                mat.SetColor("_Color", color);
+            }
+
+            return mat;
         }
 
         private static void ConfigureCamera()
@@ -92,13 +158,9 @@ namespace HoldTheLine
             // Scale for bullet size
             bullet.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
 
-            // Set color
+            // Set color using URP material
             Renderer rend = bullet.GetComponent<Renderer>();
-            Material bulletMat = new Material(Shader.Find("Standard"));
-            bulletMat.color = Color.yellow;
-            bulletMat.EnableKeyword("_EMISSION");
-            bulletMat.SetColor("_EmissionColor", Color.yellow * 0.5f);
-            rend.material = bulletMat;
+            rend.material = CreateURPMaterial(Color.yellow);
 
             // Replace MeshCollider with SphereCollider for triggers
             Object.Destroy(bullet.GetComponent<MeshCollider>());
@@ -129,11 +191,9 @@ namespace HoldTheLine
             // Scale for zombie size
             zombie.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
 
-            // Set color (green zombie)
+            // Set color (green zombie) using URP material
             Renderer rend = zombie.GetComponent<Renderer>();
-            Material zombieMat = new Material(Shader.Find("Standard"));
-            zombieMat.color = new Color(0.2f, 0.8f, 0.2f);
-            rend.material = zombieMat;
+            rend.material = CreateURPMaterial(new Color(0.2f, 0.8f, 0.2f));
 
             // Replace MeshCollider with CapsuleCollider for triggers
             Object.Destroy(zombie.GetComponent<CapsuleCollider>());
@@ -190,13 +250,9 @@ namespace HoldTheLine
             // Position player near bottom of playfield (negative Z)
             player.transform.position = new Vector3(0, 0.5f, -8f);
 
-            // Set color (cyan player)
+            // Set color (cyan player) using URP material
             Renderer rend = player.GetComponent<Renderer>();
-            Material playerMat = new Material(Shader.Find("Standard"));
-            playerMat.color = Color.cyan;
-            playerMat.EnableKeyword("_EMISSION");
-            playerMat.SetColor("_EmissionColor", Color.cyan * 0.3f);
-            rend.material = playerMat;
+            rend.material = CreateURPMaterial(Color.cyan);
 
             // Replace MeshCollider with CapsuleCollider for triggers
             Object.Destroy(player.GetComponent<CapsuleCollider>());
@@ -229,11 +285,9 @@ namespace HoldTheLine
             ground.transform.position = new Vector3(0, -0.1f, 0);
             ground.transform.localScale = new Vector3(1f, 1f, 3f); // 10 x 30 units
 
-            // Dark ground material
+            // Dark ground material using URP
             Renderer rend = ground.GetComponent<Renderer>();
-            Material groundMat = new Material(Shader.Find("Standard"));
-            groundMat.color = new Color(0.1f, 0.12f, 0.15f);
-            rend.material = groundMat;
+            rend.material = CreateURPMaterial(new Color(0.1f, 0.12f, 0.15f));
 
             // Disable collider on ground (we don't need it)
             Object.Destroy(ground.GetComponent<MeshCollider>());
