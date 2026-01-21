@@ -1,13 +1,14 @@
-using UnityEngine;
-using HoldTheLine.Player;
-using HoldTheLine.Enemy;
-using HoldTheLine.Weapons;
+// AutoInitializer.cs - Bootstraps the game automatically on Play
+// Location: Assets/_HoldTheLine/Scripts/Core/
+// No need to attach - runs automatically via RuntimeInitializeOnLoadMethod
 
-namespace HoldTheLine.Managers
+using UnityEngine;
+
+namespace HoldTheLine
 {
     /// <summary>
     /// Auto-initializes the game on startup using RuntimeInitializeOnLoadMethod.
-    /// No need to add anything to the scene - this runs automatically.
+    /// Creates all necessary GameObjects if they don't exist.
     /// </summary>
     public static class AutoInitializer
     {
@@ -17,31 +18,23 @@ namespace HoldTheLine.Managers
         private static void Initialize()
         {
             // Check if game is already set up
-            if (Object.FindObjectOfType<GameManager>() != null)
+            if (GameManager.Instance != null)
             {
-                Debug.Log("AutoInitializer: Game already set up, skipping.");
+                Debug.Log("[AutoInitializer] Game already set up, skipping.");
                 return;
             }
 
-            Debug.Log("AutoInitializer: Setting up game...");
+            Debug.Log("[AutoInitializer] Setting up game...");
             SetupGame();
         }
 
         private static void SetupGame()
         {
-            // Create white square sprite for visuals
+            // Create sprite for visuals
             whiteSquare = CreateRuntimeSprite();
 
             // Configure camera
-            Camera cam = Camera.main;
-            if (cam != null)
-            {
-                cam.orthographic = true;
-                cam.orthographicSize = 8f;
-                cam.backgroundColor = new Color(0.1f, 0.1f, 0.15f);
-                cam.clearFlags = CameraClearFlags.SolidColor;
-                cam.transform.position = new Vector3(0, 0, -10);
-            }
+            ConfigureCamera();
 
             // Create prefabs (in-memory templates)
             GameObject bulletPrefab = CreateBulletPrefab();
@@ -51,9 +44,13 @@ namespace HoldTheLine.Managers
             SetupManagers(bulletPrefab, zombiePrefab);
 
             // Create player
-            CreatePlayer(bulletPrefab);
+            CreatePlayer();
 
-            Debug.Log("AutoInitializer: Game setup complete! Use A/D or Left/Right arrows to move.");
+            // Auto-start the game after a brief delay
+            var starter = new GameObject("GameStarter").AddComponent<GameStarter>();
+            starter.StartCoroutine(starter.StartGameDelayed());
+
+            Debug.Log("[AutoInitializer] Game setup complete!");
         }
 
         private static Sprite CreateRuntimeSprite()
@@ -68,16 +65,29 @@ namespace HoldTheLine.Managers
             return Sprite.Create(tex, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f), 4);
         }
 
+        private static void ConfigureCamera()
+        {
+            Camera cam = Camera.main;
+            if (cam != null)
+            {
+                cam.orthographic = true;
+                cam.orthographicSize = 8f;
+                cam.backgroundColor = new Color(0.1f, 0.1f, 0.15f);
+                cam.clearFlags = CameraClearFlags.SolidColor;
+                cam.transform.position = new Vector3(0, 0, -10);
+            }
+        }
+
         private static GameObject CreateBulletPrefab()
         {
-            GameObject bullet = new GameObject("BulletTemplate");
+            GameObject bullet = new GameObject("BulletPrefab");
             bullet.SetActive(false);
 
             SpriteRenderer sr = bullet.AddComponent<SpriteRenderer>();
             sr.sprite = whiteSquare;
             sr.color = Color.yellow;
             sr.sortingOrder = 5;
-            bullet.transform.localScale = new Vector3(0.2f, 0.4f, 1f);
+            bullet.transform.localScale = new Vector3(0.15f, 0.3f, 1f);
 
             BoxCollider2D col = bullet.AddComponent<BoxCollider2D>();
             col.isTrigger = true;
@@ -94,7 +104,7 @@ namespace HoldTheLine.Managers
 
         private static GameObject CreateZombiePrefab()
         {
-            GameObject zombie = new GameObject("ZombieTemplate");
+            GameObject zombie = new GameObject("ZombiePrefab");
             zombie.tag = "Enemy";
             zombie.SetActive(false);
 
@@ -102,7 +112,7 @@ namespace HoldTheLine.Managers
             sr.sprite = whiteSquare;
             sr.color = new Color(0.2f, 0.8f, 0.2f);
             sr.sortingOrder = 3;
-            zombie.transform.localScale = new Vector3(0.6f, 0.8f, 1f);
+            zombie.transform.localScale = new Vector3(0.5f, 0.7f, 1f);
 
             BoxCollider2D col = zombie.AddComponent<BoxCollider2D>();
             col.isTrigger = true;
@@ -111,8 +121,7 @@ namespace HoldTheLine.Managers
             rb.gravityScale = 0;
             rb.isKinematic = true;
 
-            zombie.AddComponent<Zombie>();
-            zombie.AddComponent<ZombieHealth>();
+            zombie.AddComponent<ZombieUnit>();
 
             Object.DontDestroyOnLoad(zombie);
             return zombie;
@@ -124,21 +133,24 @@ namespace HoldTheLine.Managers
             GameObject gmObj = new GameObject("GameManager");
             gmObj.AddComponent<GameManager>();
 
-            // ObjectPool
-            GameObject poolObj = new GameObject("ObjectPool");
+            // ObjectPool - needs prefabs assigned
+            GameObject poolObj = new GameObject("ObjectPoolManager");
             ObjectPool pool = poolObj.AddComponent<ObjectPool>();
 
-            // Add pools after a frame delay
-            var helper = new GameObject("PoolSetupHelper").AddComponent<PoolSetupHelper>();
+            // Use reflection or a helper to set the prefabs
+            var helper = new GameObject("PoolHelper").AddComponent<PoolPrefabHelper>();
             helper.Setup(pool, bulletPrefab, zombiePrefab);
 
             // SpawnerManager
             GameObject spawnerObj = new GameObject("SpawnerManager");
             SpawnerManager spawner = spawnerObj.AddComponent<SpawnerManager>();
-            spawner.SetZombiePrefab(zombiePrefab);
+
+            // TargetingSystem
+            GameObject targetingObj = new GameObject("TargetingSystem");
+            targetingObj.AddComponent<TargetingSystem>();
         }
 
-        private static void CreatePlayer(GameObject bulletPrefab)
+        private static void CreatePlayer()
         {
             GameObject player = new GameObject("Player");
             player.tag = "Player";
@@ -147,8 +159,8 @@ namespace HoldTheLine.Managers
             sr.sprite = whiteSquare;
             sr.color = Color.cyan;
             sr.sortingOrder = 10;
-            player.transform.localScale = new Vector3(0.8f, 0.8f, 1f);
-            player.transform.position = new Vector3(0, -6f, 0);
+            player.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
+            player.transform.position = new Vector3(0, -4f, 0);
 
             BoxCollider2D col = player.AddComponent<BoxCollider2D>();
             col.isTrigger = true;
@@ -165,39 +177,54 @@ namespace HoldTheLine.Managers
             // Add scripts
             player.AddComponent<PlayerController>();
             player.AddComponent<PlayerHealth>();
-            player.AddComponent<TargetingSystem>();
-
-            WeaponSystem ws = player.AddComponent<WeaponSystem>();
-            ws.SetBulletPrefab(bulletPrefab);
-            ws.SetFirePoint(firePoint.transform);
+            player.AddComponent<WeaponSystem>();
         }
     }
 
     /// <summary>
-    /// Helper MonoBehaviour to set up pools after ObjectPool initializes.
+    /// Helper to set prefab references on ObjectPool via serialized fields
     /// </summary>
-    public class PoolSetupHelper : MonoBehaviour
+    public class PoolPrefabHelper : MonoBehaviour
     {
-        private ObjectPool pool;
-        private GameObject bulletPrefab;
-        private GameObject zombiePrefab;
-
-        public void Setup(ObjectPool p, GameObject bullet, GameObject zombie)
+        public void Setup(ObjectPool pool, GameObject bulletPrefab, GameObject zombiePrefab)
         {
-            pool = p;
-            bulletPrefab = bullet;
-            zombiePrefab = zombie;
-            StartCoroutine(SetupPools());
+            StartCoroutine(SetupDelayed(pool, bulletPrefab, zombiePrefab));
         }
 
-        private System.Collections.IEnumerator SetupPools()
+        private System.Collections.IEnumerator SetupDelayed(ObjectPool pool, GameObject bulletPrefab, GameObject zombiePrefab)
         {
-            yield return null; // Wait for ObjectPool.Awake
+            yield return null;
 
-            if (pool != null)
+            // Use reflection to set the serialized fields
+            var type = typeof(ObjectPool);
+            var bulletField = type.GetField("bulletPrefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var zombieField = type.GetField("zombiePrefab", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            if (bulletField != null) bulletField.SetValue(pool, bulletPrefab);
+            if (zombieField != null) zombieField.SetValue(pool, zombiePrefab);
+
+            // Reinitialize pools
+            var initMethod = type.GetMethod("InitializePools", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (initMethod != null) initMethod.Invoke(pool, null);
+
+            Destroy(gameObject);
+        }
+    }
+
+    /// <summary>
+    /// Helper to start the game after initialization
+    /// </summary>
+    public class GameStarter : MonoBehaviour
+    {
+        public System.Collections.IEnumerator StartGameDelayed()
+        {
+            yield return null;
+            yield return null; // Wait 2 frames for everything to initialize
+
+            if (GameManager.Instance != null)
             {
-                pool.AddPool("Bullet", bulletPrefab, 20);
-                pool.AddPool("Zombie", zombiePrefab, 15);
+                GameManager.Instance.StartGame();
+                Debug.Log("[AutoInitializer] Game started! Use touch/mouse drag to move horizontally.");
             }
 
             Destroy(gameObject);
