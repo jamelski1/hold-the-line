@@ -93,6 +93,9 @@ namespace HoldTheLine
 
         private void HandleInput()
         {
+            // Keyboard input (always available)
+            HandleKeyboardInput();
+
 #if UNITY_EDITOR
             // Mouse input for editor testing
             HandleMouseInput();
@@ -100,6 +103,27 @@ namespace HoldTheLine
             // Touch input for mobile
             HandleTouchInput();
 #endif
+        }
+
+        private void HandleKeyboardInput()
+        {
+            float horizontal = 0f;
+
+            // Arrow keys
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            {
+                horizontal = -1f;
+            }
+            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            {
+                horizontal = 1f;
+            }
+
+            if (horizontal != 0f)
+            {
+                targetX += horizontal * moveSpeed * Time.deltaTime;
+                targetX = Mathf.Clamp(targetX, minX, maxX);
+            }
         }
 
         private void HandleMouseInput()
