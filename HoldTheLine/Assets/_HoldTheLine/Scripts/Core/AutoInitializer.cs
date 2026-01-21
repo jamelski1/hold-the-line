@@ -275,6 +275,9 @@ namespace HoldTheLine
             player.AddComponent<PlayerController>();
             player.AddComponent<PlayerHealth>();
             player.AddComponent<WeaponSystem>();
+
+            // Add robot visuals (replaces capsule with animated robot)
+            player.AddComponent<PlayerVisualsInstaller>();
         }
 
         private static void CreateGroundPlane()
