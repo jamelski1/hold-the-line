@@ -1,49 +1,169 @@
-using UnityEngine;
-using System;
+// PlayerHealth.cs - Manages player health and damage
+// Location: Assets/_HoldTheLine/Scripts/Player/
+// Attach to: Player prefab (same object as PlayerController)
 
-namespace HoldTheLine.Player
+using System;
+using UnityEngine;
+
+namespace HoldTheLine
 {
+    /// <summary>
+    /// Manages player health, damage intake, and death.
+    /// </summary>
     public class PlayerHealth : MonoBehaviour
     {
-        [SerializeField] private int maxHealth = 3;
+        public static PlayerHealth Instance { get; private set; }
 
-        private int currentHealth;
+        [Header("Health Settings")]
+        [SerializeField] private float maxHealth = 100f;
+        [SerializeField] private float invincibilityDuration = 0.5f;
 
-        public event Action<int, int> OnHealthChanged;
-        public event Action OnPlayerDeath;
+        [Header("Visual Feedback")]
+        [SerializeField] private Renderer playerRenderer;
+        [SerializeField] private Color damageFlashColor = Color.red;
+        [SerializeField] private float flashDuration = 0.1f;
 
-        public int CurrentHealth => currentHealth;
-        public int MaxHealth => maxHealth;
+        // State
+        private float currentHealth;
+        private float invincibilityTimer;
+        private bool isInvincible;
+        private Color originalColor;
+
+        // Events
+        public event Action<float, float> OnHealthChanged; // current, max
+        public event Action OnDamageTaken;
+        public event Action OnDied;
+
+        public float CurrentHealth => currentHealth;
+        public float MaxHealth => maxHealth;
+        public float HealthPercent => currentHealth / maxHealth;
+        public bool IsAlive => currentHealth > 0;
+
+        private void Awake()
+        {
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+        }
 
         private void Start()
         {
+            if (playerRenderer != null)
+            {
+                originalColor = playerRenderer.material.color;
+            }
+
+            ResetHealth();
+        }
+
+        private void Update()
+        {
+            // Update invincibility timer
+            if (isInvincible)
+            {
+                invincibilityTimer -= Time.deltaTime;
+                if (invincibilityTimer <= 0f)
+                {
+                    isInvincible = false;
+                    RestoreColor();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reset health to max (called on game start/restart)
+        /// </summary>
+        public void ResetHealth()
+        {
             currentHealth = maxHealth;
+            isInvincible = false;
+            invincibilityTimer = 0f;
+            RestoreColor();
             OnHealthChanged?.Invoke(currentHealth, maxHealth);
         }
 
-        public void TakeDamage(int damage)
+        /// <summary>
+        /// Apply damage to player
+        /// </summary>
+        public void TakeDamage(float damage)
         {
-            currentHealth -= damage;
-            currentHealth = Mathf.Max(0, currentHealth);
+            if (!IsAlive || isInvincible) return;
 
+            currentHealth = Mathf.Max(0f, currentHealth - damage);
             OnHealthChanged?.Invoke(currentHealth, maxHealth);
+            OnDamageTaken?.Invoke();
 
-            if (currentHealth <= 0)
+            // Flash red
+            FlashDamage();
+
+            // Brief invincibility
+            isInvincible = true;
+            invincibilityTimer = invincibilityDuration;
+
+            if (currentHealth <= 0f)
             {
                 Die();
             }
         }
 
-        private void Die()
+        /// <summary>
+        /// Heal the player
+        /// </summary>
+        public void Heal(float amount)
         {
-            OnPlayerDeath?.Invoke();
-            Debug.Log("Player died!");
+            if (!IsAlive) return;
+
+            currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
         }
 
-        public void Heal(int amount)
+        private void Die()
         {
-            currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+            OnDied?.Invoke();
+            GameManager.Instance?.PlayerDied();
+        }
+
+        private void FlashDamage()
+        {
+            if (playerRenderer == null) return;
+
+            playerRenderer.material.color = damageFlashColor;
+            Invoke(nameof(RestoreColor), flashDuration);
+        }
+
+        private void RestoreColor()
+        {
+            if (playerRenderer != null)
+            {
+                playerRenderer.material.color = originalColor;
+            }
+        }
+
+        private void OnEnable()
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+            }
+        }
+
+        private void OnDisable()
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+            }
+        }
+
+        private void HandleGameStateChanged(GameState newState)
+        {
+            if (newState == GameState.Playing && GameManager.Instance.CurrentWave == 1)
+            {
+                ResetHealth();
+            }
         }
     }
 }
