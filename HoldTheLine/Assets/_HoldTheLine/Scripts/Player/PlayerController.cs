@@ -1,4 +1,4 @@
-// PlayerController.cs - Handles horizontal touch drag movement
+// PlayerController.cs - Handles horizontal movement (3D Version)
 // Location: Assets/_HoldTheLine/Scripts/Player/
 // Attach to: Player prefab
 
@@ -7,8 +7,13 @@ using UnityEngine;
 namespace HoldTheLine
 {
     /// <summary>
-    /// Handles player horizontal movement via touch drag.
+    /// Handles player horizontal movement via keyboard and touch drag.
     /// Player is clamped to playfield bounds and only moves on X axis.
+    ///
+    /// 3D AXIS MAPPING (Top-Down View):
+    /// - X axis = horizontal movement (left/right)
+    /// - Z axis = fixed (player stays at PlayerZ)
+    /// - Y axis = height (fixed at ground level)
     /// </summary>
     public class PlayerController : MonoBehaviour
     {
@@ -20,7 +25,7 @@ namespace HoldTheLine
 
         [Header("Touch Settings")]
         [SerializeField] private float dragSensitivity = 1f;
-        [SerializeField] private bool useRelativeDrag = true; // Relative drag vs absolute position
+        [SerializeField] private bool useRelativeDrag = true;
 
         // Current state
         private float targetX;
@@ -32,7 +37,8 @@ namespace HoldTheLine
         // Bounds cache
         private float minX;
         private float maxX;
-        private float fixedY;
+        private float fixedY = 0.5f; // Height above ground
+        private float fixedZ;        // Depth position (player line)
 
         public bool IsDragging => isDragging;
         public Vector3 Position => transform.position;
@@ -60,14 +66,14 @@ namespace HoldTheLine
             {
                 minX = GameManager.Instance.PlayfieldMinX;
                 maxX = GameManager.Instance.PlayfieldMaxX;
-                fixedY = GameManager.Instance.PlayerY;
+                fixedZ = GameManager.Instance.PlayerZ;
             }
             else
             {
-                // Fallback defaults
-                minX = -2.5f;
-                maxX = 2.5f;
-                fixedY = -4f;
+                // Fallback defaults for 3D
+                minX = -4f;
+                maxX = 4f;
+                fixedZ = -8f;
             }
         }
 
@@ -77,7 +83,7 @@ namespace HoldTheLine
         public void ResetPosition()
         {
             targetX = 0f;
-            transform.position = new Vector3(0f, fixedY, 0f);
+            transform.position = new Vector3(0f, fixedY, fixedZ);
         }
 
         private void Update()
@@ -217,11 +223,11 @@ namespace HoldTheLine
                 moveSpeed
             );
 
-            // Apply clamped position
+            // Apply clamped position (X movement only, Y and Z fixed)
             transform.position = new Vector3(
                 Mathf.Clamp(newX, minX, maxX),
                 fixedY,
-                0f
+                fixedZ
             );
         }
 
@@ -232,9 +238,18 @@ namespace HoldTheLine
         {
             if (mainCamera == null) mainCamera = Camera.main;
 
-            Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, 10f));
-            worldPos.z = 0f;
-            return worldPos;
+            // Create a ray from the camera through the screen position
+            Ray ray = mainCamera.ScreenPointToRay(new Vector3(screenPos.x, screenPos.y, 0f));
+
+            // Find where the ray intersects the XZ plane (Y = 0)
+            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+            if (groundPlane.Raycast(ray, out float distance))
+            {
+                return ray.GetPoint(distance);
+            }
+
+            // Fallback
+            return new Vector3(0, 0, fixedZ);
         }
 
         /// <summary>
@@ -243,9 +258,9 @@ namespace HoldTheLine
         public bool IsPositionOnPlayer(Vector2 screenPos)
         {
             Vector3 worldPos = ScreenToWorldPosition(screenPos);
-            float distance = Vector2.Distance(
-                new Vector2(transform.position.x, transform.position.y),
-                new Vector2(worldPos.x, worldPos.y)
+            float distance = Vector3.Distance(
+                new Vector3(transform.position.x, 0, transform.position.z),
+                new Vector3(worldPos.x, 0, worldPos.z)
             );
             return distance < 1f; // 1 unit radius
         }
@@ -253,12 +268,12 @@ namespace HoldTheLine
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
-            // Visualize movement bounds
+            // Visualize movement bounds (on XZ plane)
             Gizmos.color = Color.cyan;
-            float y = Application.isPlaying ? fixedY : -4f;
-            float minBound = Application.isPlaying ? minX : -2.5f;
-            float maxBound = Application.isPlaying ? maxX : 2.5f;
-            Gizmos.DrawLine(new Vector3(minBound, y, 0), new Vector3(maxBound, y, 0));
+            float z = Application.isPlaying ? fixedZ : -8f;
+            float minBound = Application.isPlaying ? minX : -4f;
+            float maxBound = Application.isPlaying ? maxX : 4f;
+            Gizmos.DrawLine(new Vector3(minBound, 0.5f, z), new Vector3(maxBound, 0.5f, z));
         }
 #endif
     }

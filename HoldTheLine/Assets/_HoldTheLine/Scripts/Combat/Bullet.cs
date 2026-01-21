@@ -1,6 +1,6 @@
-// Bullet.cs - Projectile that damages enemies
+// Bullet.cs - Projectile that damages enemies (3D Version)
 // Location: Assets/_HoldTheLine/Scripts/Combat/
-// Attach to: Bullet prefab (requires Collider2D with IsTrigger)
+// Attach to: Bullet prefab (requires Collider with IsTrigger)
 
 using UnityEngine;
 
@@ -9,8 +9,12 @@ namespace HoldTheLine
     /// <summary>
     /// Projectile fired by WeaponSystem. Moves toward target and deals damage on contact.
     /// Uses object pooling for performance.
+    ///
+    /// 3D AXIS MAPPING:
+    /// - Bullets move in +Z direction (toward zombies) by default
+    /// - Bounds check uses Z position
     /// </summary>
-    [RequireComponent(typeof(Collider2D))]
+    [RequireComponent(typeof(Collider))]
     public class Bullet : MonoBehaviour
     {
         [Header("Bullet Settings")]
@@ -50,9 +54,11 @@ namespace HoldTheLine
             lifetime = maxLifetime;
             isActive = true;
 
-            // Rotate to face direction
-            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
-            cachedTransform.rotation = Quaternion.Euler(0f, 0f, angle);
+            // Rotate to face direction (for 3D, rotate around Y axis for XZ plane movement)
+            if (direction != Vector3.zero)
+            {
+                cachedTransform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+            }
         }
 
         private void Update()
@@ -70,12 +76,12 @@ namespace HoldTheLine
                 return;
             }
 
-            // Bounds check (despawn if off screen)
+            // Bounds check (despawn if off playfield) - uses Z axis now
             if (GameManager.Instance != null)
             {
                 Vector3 pos = cachedTransform.position;
-                if (pos.y > GameManager.Instance.SpawnY + 2f ||
-                    pos.y < GameManager.Instance.DespawnY ||
+                if (pos.z > GameManager.Instance.SpawnZ + 2f ||
+                    pos.z < GameManager.Instance.DespawnZ - 2f ||
                     pos.x < GameManager.Instance.PlayfieldMinX - 2f ||
                     pos.x > GameManager.Instance.PlayfieldMaxX + 2f)
                 {
@@ -84,7 +90,8 @@ namespace HoldTheLine
             }
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        // 3D collision detection (replaces OnTriggerEnter2D)
+        private void OnTriggerEnter(Collider other)
         {
             if (!isActive) return;
 

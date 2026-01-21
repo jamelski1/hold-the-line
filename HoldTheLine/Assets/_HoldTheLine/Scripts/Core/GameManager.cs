@@ -1,4 +1,4 @@
-// GameManager.cs - Central game state and flow controller
+// GameManager.cs - Central game state and flow controller (3D Version)
 // Location: Assets/_HoldTheLine/Scripts/Core/
 // Attach to: Empty GameObject named "GameManager" in scene
 
@@ -9,6 +9,11 @@ namespace HoldTheLine
 {
     /// <summary>
     /// Controls game state, wave progression, and coordinates all systems.
+    ///
+    /// 3D AXIS MAPPING (Top-Down View):
+    /// - X axis = horizontal (player left/right movement)
+    /// - Z axis = depth (down the screen - zombies move in -Z direction)
+    /// - Y axis = height (minimal use)
     /// </summary>
     public class GameManager : MonoBehaviour
     {
@@ -19,23 +24,30 @@ namespace HoldTheLine
         [SerializeField] private float waveTransitionDuration = 2f;
         [SerializeField] private float upgradeObtainedPauseDuration = 1f;
 
-        [Header("Playfield Bounds (World Units)")]
-        [SerializeField] private float playfieldMinX = -2.5f;
-        [SerializeField] private float playfieldMaxX = 2.5f;
-        [SerializeField] private float playfieldMinY = -5f;
-        [SerializeField] private float playfieldMaxY = 5f;
-        [SerializeField] private float playerY = -4f;
-        [SerializeField] private float spawnY = 6f;
-        [SerializeField] private float despawnY = -6f;
+        [Header("Playfield Bounds (World Units - 3D)")]
+        [SerializeField] private float playfieldMinX = -4f;
+        [SerializeField] private float playfieldMaxX = 4f;
+        [SerializeField] private float playfieldMinZ = -10f;  // Bottom of screen (player side)
+        [SerializeField] private float playfieldMaxZ = 10f;   // Top of screen (spawn side)
+        [SerializeField] private float playerZ = -8f;         // Player position on Z axis
+        [SerializeField] private float spawnZ = 12f;          // Where zombies spawn
+        [SerializeField] private float despawnZ = -10f;       // Where zombies despawn/damage player
 
         // Public properties for playfield bounds
         public float PlayfieldMinX => playfieldMinX;
         public float PlayfieldMaxX => playfieldMaxX;
-        public float PlayfieldMinY => playfieldMinY;
-        public float PlayfieldMaxY => playfieldMaxY;
-        public float PlayerY => playerY;
-        public float SpawnY => spawnY;
-        public float DespawnY => despawnY;
+        public float PlayfieldMinZ => playfieldMinZ;
+        public float PlayfieldMaxZ => playfieldMaxZ;
+        public float PlayerZ => playerZ;
+        public float SpawnZ => spawnZ;
+        public float DespawnZ => despawnZ;
+
+        // Legacy Y properties mapped to Z for compatibility
+        public float PlayfieldMinY => playfieldMinZ;
+        public float PlayfieldMaxY => playfieldMaxZ;
+        public float PlayerY => playerZ;
+        public float SpawnY => spawnZ;
+        public float DespawnY => despawnZ;
 
         // Game state
         public GameState CurrentState { get; private set; } = GameState.Menu;
@@ -220,25 +232,26 @@ namespace HoldTheLine
         }
 
 #if UNITY_EDITOR
-        // Visualize playfield bounds in editor
+        // Visualize playfield bounds in editor (3D top-down)
         private void OnDrawGizmos()
         {
+            // Draw playfield bounds on XZ plane
             Gizmos.color = Color.green;
-            Vector3 center = new Vector3((playfieldMinX + playfieldMaxX) / 2f, (playfieldMinY + playfieldMaxY) / 2f, 0);
-            Vector3 size = new Vector3(playfieldMaxX - playfieldMinX, playfieldMaxY - playfieldMinY, 0.1f);
+            Vector3 center = new Vector3((playfieldMinX + playfieldMaxX) / 2f, 0.1f, (playfieldMinZ + playfieldMaxZ) / 2f);
+            Vector3 size = new Vector3(playfieldMaxX - playfieldMinX, 0.1f, playfieldMaxZ - playfieldMinZ);
             Gizmos.DrawWireCube(center, size);
 
-            // Draw spawn line
+            // Draw spawn line (where zombies spawn)
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(new Vector3(playfieldMinX, spawnY, 0), new Vector3(playfieldMaxX, spawnY, 0));
+            Gizmos.DrawLine(new Vector3(playfieldMinX, 0.1f, spawnZ), new Vector3(playfieldMaxX, 0.1f, spawnZ));
 
-            // Draw despawn line
+            // Draw despawn line (player defense line)
             Gizmos.color = Color.blue;
-            Gizmos.DrawLine(new Vector3(playfieldMinX, despawnY, 0), new Vector3(playfieldMaxX, despawnY, 0));
+            Gizmos.DrawLine(new Vector3(playfieldMinX, 0.1f, despawnZ), new Vector3(playfieldMaxX, 0.1f, despawnZ));
 
             // Draw player line
             Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(new Vector3(playfieldMinX, playerY, 0), new Vector3(playfieldMaxX, playerY, 0));
+            Gizmos.DrawLine(new Vector3(playfieldMinX, 0.1f, playerZ), new Vector3(playfieldMaxX, 0.1f, playerZ));
         }
 #endif
     }

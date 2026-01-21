@@ -1,4 +1,4 @@
-// SpawnerManager.cs - Handles spawning of zombies, pickups, and upgrade targets
+// SpawnerManager.cs - Handles spawning of zombies, pickups, and upgrade targets (3D Version)
 // Location: Assets/_HoldTheLine/Scripts/Enemies/
 // Attach to: Empty GameObject named "SpawnerManager" in scene
 
@@ -9,34 +9,40 @@ namespace HoldTheLine
     /// <summary>
     /// Manages spawning of all game entities with difficulty scaling.
     /// Handles wave progression and spawn patterns.
+    ///
+    /// 3D AXIS MAPPING:
+    /// - Spawns at high Z (spawnZ), entities move toward low Z (despawnZ)
+    /// - X axis is horizontal spread
+    /// - Y is height (fixed at ground level)
     /// </summary>
     public class SpawnerManager : MonoBehaviour
     {
         public static SpawnerManager Instance { get; private set; }
 
         [Header("Spawn Area")]
-        [SerializeField] private float spawnYOffset = 1f; // Offset above spawn line
+        [SerializeField] private float spawnZOffset = 1f; // Offset beyond spawn line
+        [SerializeField] private float spawnHeight = 0.5f; // Y position for spawned objects
 
         [Header("Zombie Spawning")]
-        [SerializeField] private float baseZombieSpawnRate = 1f; // Zombies per second at wave 1
+        [SerializeField] private float baseZombieSpawnRate = 1f;
         [SerializeField] private float spawnRateIncreasePerWave = 0.2f;
         [SerializeField] private float maxSpawnRate = 5f;
         [SerializeField] private int zombiesPerWave = 10;
         [SerializeField] private int zombiesIncreasePerWave = 5;
 
         [Header("Zombie Scaling")]
-        [SerializeField] private float zombieHealthScalePerWave = 0.1f; // +10% per wave
-        [SerializeField] private float zombieSpeedScalePerWave = 0.05f; // +5% per wave
+        [SerializeField] private float zombieHealthScalePerWave = 0.1f;
+        [SerializeField] private float zombieSpeedScalePerWave = 0.05f;
         [SerializeField] private float maxHealthMultiplier = 3f;
         [SerializeField] private float maxSpeedMultiplier = 2f;
 
         [Header("Pickup Spawning")]
-        [SerializeField] private float pickupSpawnChance = 0.15f; // 15% chance per spawn cycle
+        [SerializeField] private float pickupSpawnChance = 0.15f;
         [SerializeField] private float minPickupInterval = 5f;
         [SerializeField] private float maxPickupInterval = 15f;
 
         [Header("Upgrade Target Spawning")]
-        [SerializeField] private float upgradeTargetSpawnChance = 0.1f; // 10% chance
+        [SerializeField] private float upgradeTargetSpawnChance = 0.1f;
         [SerializeField] private float minUpgradeInterval = 10f;
         [SerializeField] private float maxUpgradeInterval = 25f;
         [SerializeField] private int maxActiveUpgradeTargets = 2;
@@ -54,10 +60,10 @@ namespace HoldTheLine
         private float currentHealthMultiplier;
         private float currentSpeedMultiplier;
 
-        // Cached bounds
+        // Cached bounds (3D - uses Z for depth)
         private float minX;
         private float maxX;
-        private float spawnY;
+        private float spawnZ;
 
         private void Awake()
         {
@@ -99,13 +105,14 @@ namespace HoldTheLine
             {
                 minX = GameManager.Instance.PlayfieldMinX;
                 maxX = GameManager.Instance.PlayfieldMaxX;
-                spawnY = GameManager.Instance.SpawnY + spawnYOffset;
+                spawnZ = GameManager.Instance.SpawnZ + spawnZOffset;
             }
             else
             {
-                minX = -2.5f;
-                maxX = 2.5f;
-                spawnY = 7f;
+                // Fallback defaults for 3D
+                minX = -4f;
+                maxX = 4f;
+                spawnZ = 13f;
             }
         }
 
@@ -196,9 +203,9 @@ namespace HoldTheLine
             ZombieUnit zombie = zombieObj.GetComponent<ZombieUnit>();
             if (zombie != null)
             {
-                // Random X position within bounds
+                // Random X position within bounds, fixed Y height, spawn at spawnZ
                 float x = Random.Range(minX + 0.5f, maxX - 0.5f);
-                Vector3 spawnPos = new Vector3(x, spawnY, 0f);
+                Vector3 spawnPos = new Vector3(x, spawnHeight, spawnZ);
 
                 zombie.Initialize(spawnPos, currentHealthMultiplier, currentSpeedMultiplier);
                 zombiesSpawnedThisWave++;
@@ -233,7 +240,7 @@ namespace HoldTheLine
             if (pickup != null)
             {
                 float x = Random.Range(minX + 0.5f, maxX - 0.5f);
-                Vector3 spawnPos = new Vector3(x, spawnY, 0f);
+                Vector3 spawnPos = new Vector3(x, spawnHeight, spawnZ);
 
                 // Random multiplier type
                 MultiplierType type = (MultiplierType)Random.Range(0, 4);
@@ -281,10 +288,10 @@ namespace HoldTheLine
             UpgradeTarget upgradeTarget = targetObj.GetComponent<UpgradeTarget>();
             if (upgradeTarget != null)
             {
-                // Spawn in upper portion of playfield
+                // Spawn in upper portion of playfield (high Z values)
                 float x = Random.Range(minX + 1f, maxX - 1f);
-                float y = Random.Range(GameManager.Instance.PlayfieldMaxY - 2f, GameManager.Instance.SpawnY - 1f);
-                Vector3 spawnPos = new Vector3(x, y, 0f);
+                float z = Random.Range(GameManager.Instance.PlayfieldMaxZ - 2f, GameManager.Instance.SpawnZ - 1f);
+                Vector3 spawnPos = new Vector3(x, spawnHeight, z);
 
                 // Scale health with wave
                 float healthMultiplier = 1f + (GameManager.Instance.CurrentWave * 0.5f);
@@ -331,8 +338,6 @@ namespace HoldTheLine
         {
             if (targetZombiesThisWave == 0) return 0f;
 
-            // Combine spawn progress and kill progress
-            float spawnProgress = (float)zombiesSpawnedThisWave / targetZombiesThisWave;
             int activeZombies = TargetingSystem.Instance?.GetActiveZombieCount() ?? 0;
             int killedZombies = zombiesSpawnedThisWave - activeZombies;
             float killProgress = (float)killedZombies / targetZombiesThisWave;
