@@ -922,12 +922,12 @@ PlayerSettings:
   qnxGraphicConfPath: 
   apiCompatibilityLevel: 6
   captureStartupLogs: {}
-  activeInputHandler: 1
+  activeInputHandler: 2
   windowsGamepadBackendHint: 0
   cloudProjectId: f5dd9bba-f518-4375-9f64-108bfb238331
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: HoldTheLine
+  projectName: My project
   organizationId: unity_69e0c855b1a0de99babc
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
