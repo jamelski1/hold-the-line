@@ -1,4 +1,4 @@
-// TargetingSystem.cs - Manages target priority switching (Tap-to-toggle model)
+// TargetingSystem.cs - Manages target priority switching (3D Version)
 // Location: Assets/_HoldTheLine/Scripts/Combat/
 // Attach to: Player prefab or GameManager object
 
@@ -10,20 +10,17 @@ namespace HoldTheLine
     /// <summary>
     /// Manages weapon targeting priority using Tap-to-Toggle model.
     ///
-    /// Interaction Model B: Tap-to-toggle priority
-    /// - Tap on an UpgradeTarget to focus fire on it
-    /// - Fire returns to zombies when:
-    ///   1. Target is destroyed
-    ///   2. Player taps elsewhere
-    ///   3. Timeout occurs (optional)
+    /// 3D AXIS MAPPING:
+    /// - Default fire direction is +Z (Vector3.forward) toward zombies
+    /// - Target positions use XZ plane for distance calculations
     /// </summary>
     public class TargetingSystem : MonoBehaviour
     {
         public static TargetingSystem Instance { get; private set; }
 
         [Header("Targeting Settings")]
-        [SerializeField] private float targetingTimeout = 10f; // Auto-return to zombies after this time
-        [SerializeField] private float tapRadius = 1f; // How close tap needs to be to select target
+        [SerializeField] private float targetingTimeout = 10f;
+        [SerializeField] private float tapRadius = 1f;
         [SerializeField] private LayerMask upgradeTargetLayer;
         [SerializeField] private LayerMask zombieLayer;
 
@@ -117,15 +114,13 @@ namespace HoldTheLine
         private void ProcessTap(Vector2 screenPosition)
         {
             // Don't process taps that are clearly for movement (lower third of screen)
-            // This prevents accidental target switching while moving
             if (screenPosition.y < Screen.height * 0.35f)
             {
                 return;
             }
 
-            // Convert to world position
-            Vector3 worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, 10f));
-            worldPos.z = 0f;
+            // Convert to world position using raycast to XZ plane
+            Vector3 worldPos = ScreenToWorldPosition(screenPosition);
 
             // Check if tapping on an upgrade target
             UpgradeTarget tappedTarget = FindNearestUpgradeTarget(worldPos);
@@ -142,6 +137,23 @@ namespace HoldTheLine
             }
         }
 
+        private Vector3 ScreenToWorldPosition(Vector2 screenPosition)
+        {
+            if (mainCamera == null) mainCamera = Camera.main;
+
+            // Create a ray from the camera through the screen position
+            Ray ray = mainCamera.ScreenPointToRay(new Vector3(screenPosition.x, screenPosition.y, 0f));
+
+            // Find where the ray intersects the XZ plane (Y = 0)
+            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+            if (groundPlane.Raycast(ray, out float distance))
+            {
+                return ray.GetPoint(distance);
+            }
+
+            return Vector3.zero;
+        }
+
         private UpgradeTarget FindNearestUpgradeTarget(Vector3 worldPosition)
         {
             UpgradeTarget nearest = null;
@@ -151,9 +163,10 @@ namespace HoldTheLine
             {
                 if (target == null || !target.IsAlive) continue;
 
+                // Distance on XZ plane only
                 float distance = Vector2.Distance(
-                    new Vector2(worldPosition.x, worldPosition.y),
-                    new Vector2(target.transform.position.x, target.transform.position.y)
+                    new Vector2(worldPosition.x, worldPosition.z),
+                    new Vector2(target.transform.position.x, target.transform.position.z)
                 );
 
                 if (distance < nearestDistance)
@@ -221,7 +234,8 @@ namespace HoldTheLine
         }
 
         /// <summary>
-        /// Get the direction bullets should travel based on current targeting
+        /// Get the direction bullets should travel based on current targeting.
+        /// In 3D, default direction is +Z (forward toward zombies).
         /// </summary>
         public Vector3 GetTargetDirection(Vector3 fromPosition)
         {
@@ -229,19 +243,23 @@ namespace HoldTheLine
             {
                 // Aim at upgrade target
                 Vector3 targetPos = currentUpgradeTarget.transform.position;
-                return (targetPos - fromPosition).normalized;
+                Vector3 direction = targetPos - fromPosition;
+                direction.y = 0; // Keep bullets on horizontal plane
+                return direction.normalized;
             }
 
-            // Default: aim at nearest zombie or straight up
+            // Default: aim at nearest zombie or straight forward (+Z)
             ZombieUnit nearestZombie = FindNearestZombie(fromPosition);
             if (nearestZombie != null)
             {
                 Vector3 targetPos = nearestZombie.transform.position;
-                return (targetPos - fromPosition).normalized;
+                Vector3 direction = targetPos - fromPosition;
+                direction.y = 0; // Keep bullets on horizontal plane
+                return direction.normalized;
             }
 
-            // No targets - shoot straight up
-            return Vector3.up;
+            // No targets - shoot straight forward (+Z direction)
+            return Vector3.forward;
         }
 
         private ZombieUnit FindNearestZombie(Vector3 fromPosition)
@@ -253,7 +271,12 @@ namespace HoldTheLine
             {
                 if (zombie == null || !zombie.IsAlive) continue;
 
-                float distance = Vector3.Distance(fromPosition, zombie.transform.position);
+                // Distance on XZ plane
+                float distance = Vector3.Distance(
+                    new Vector3(fromPosition.x, 0, fromPosition.z),
+                    new Vector3(zombie.transform.position.x, 0, zombie.transform.position.z)
+                );
+
                 if (distance < nearestDistance)
                 {
                     nearestDistance = distance;

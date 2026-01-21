@@ -1,17 +1,21 @@
-// ZombieUnit.cs - Enemy that moves toward player
+// ZombieUnit.cs - Enemy that moves toward player (3D Version)
 // Location: Assets/_HoldTheLine/Scripts/Enemies/
-// Attach to: Zombie prefab (requires Collider2D with IsTrigger)
+// Attach to: Zombie prefab (requires Collider with IsTrigger)
 
 using UnityEngine;
 
 namespace HoldTheLine
 {
     /// <summary>
-    /// Zombie enemy that moves vertically downward.
-    /// Damages player on contact or when reaching bottom threshold.
+    /// Zombie enemy that moves in -Z direction (toward player).
+    /// Damages player on contact or when reaching despawn threshold.
     /// Implements IDamageable for bullet interaction.
+    ///
+    /// 3D AXIS MAPPING:
+    /// - Zombies move in -Z direction (toward player/camera bottom)
+    /// - Despawn check uses Z position, not Y
     /// </summary>
-    [RequireComponent(typeof(Collider2D))]
+    [RequireComponent(typeof(Collider))]
     public class ZombieUnit : MonoBehaviour, IDamageable
     {
         [Header("Movement")]
@@ -44,6 +48,10 @@ namespace HoldTheLine
         private void Awake()
         {
             cachedTransform = transform;
+            if (zombieRenderer == null)
+            {
+                zombieRenderer = GetComponent<Renderer>();
+            }
             if (zombieRenderer != null)
             {
                 originalColor = zombieRenderer.material.color;
@@ -86,13 +94,13 @@ namespace HoldTheLine
         {
             if (!isActive) return;
 
-            // Move downward
-            cachedTransform.position += Vector3.down * (currentSpeed * Time.deltaTime);
+            // Move in -Z direction (toward player/bottom of screen)
+            cachedTransform.position += Vector3.back * (currentSpeed * Time.deltaTime);
 
-            // Check if reached despawn threshold
+            // Check if reached despawn threshold (Z position)
             if (GameManager.Instance != null)
             {
-                if (cachedTransform.position.y <= GameManager.Instance.DespawnY)
+                if (cachedTransform.position.z <= GameManager.Instance.DespawnZ)
                 {
                     // Zombie reached the line - damage player and despawn
                     ReachedPlayer();
@@ -142,7 +150,8 @@ namespace HoldTheLine
             ObjectPool.Instance?.Return(PoolType.Zombie, gameObject);
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+        // 3D collision detection (replaces OnTriggerEnter2D)
+        private void OnTriggerEnter(Collider other)
         {
             if (!isActive) return;
 
