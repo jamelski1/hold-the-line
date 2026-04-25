@@ -1,0 +1,471 @@
+query,gold_tool,requires_tool
+Are there any good adventure games with puzzle-solving elements that feature a diverse range of challenging puzzles and require players to think critically and creatively to progress through the game?,GameTool,True
+Why is it so difficult to find a rental property in Montreal? Help me find one!,HouseRentingTool,True
+Any suggestions for quick and easy dinner ideas?,DietTool,True
+What is the formula for the volume of a sphere?,,False
+What does the word 'ephemeral' mean?,,False
+I'm hosting a big event and I want a visually appealing website to promote it. Can you generate one for me within a minute?,WebsiteTool,True
+"I need a unique and catchy domain name that reflects my passion for photography, which I can use specifically for showcasing my portfolio of stunning photographs.",URLTool,True
+Can you suggest nonprofits that are actively working towards a cause?,CharityTool,True
+Define 'amphibian' versus 'reptile'.,,False
+"I need immediate assistance in finding a pet-friendly apartment in the bustling city of Chicago, as I am currently in search of a suitable living space that allows me to accommodate my beloved furry companion.",HouseRentingTool,True
+"I have an upcoming interview for a software development position, and I would like advice on how to best prepare for technical questions and demonstrate my skills and experience in software development to the hiring managers.",JobTool,True
+What is a synonym for 'happy'?,,False
+What is the boiling point of nitrogen?,,False
+What is the capital of Portugal?,,False
+Name the deepest lake in the world.,,False
+Define 'mole' as a unit in chemistry.,,False
+I am looking for reliable and tested code snippets specifically meant for the purpose of implementing user authentication in a Node.js project.,RepoTool,True
+Is there a way to adjust the color saturation in a video I recorded on my phone?,MediaModifyTool,True
+Who wrote 'The Sun Also Rises'?,,False
+Hello! I need help in identifying the most suitable career path for me. Can you suggest a plugin that can analyze my personality and provide career recommendations?,JobTool,True
+Can you recommend a book on machine learning from Wikidocs?,BookTool,True
+Define 'mitochondria'.,,False
+"I want to see a detailed and labeled diagram of the human digestive system, clearly showing the structures and organs including the mouth, esophagus, stomach, small intestine, large intestine, liver, pancreas, and gallbladder.",ChartTool,True
+Who is the Roman god of war?,,False
+What companies in my area are currently offering job opportunities specifically for nurses?,JobTool,True
+Can you help me find affordable flights from New York to Los Angeles?,TripTool,True
+Define 'ohm' as a unit.,,False
+Can you please provide me with information on where I can find the most recently updated job openings specifically within the United Kingdom? I would greatly appreciate your assistance in this matter.,JobTool,True
+How can I get nutrition advice?,DietTool,True
+"Could you analyze the customer reviews for different laptops under $1000 and provide a detailed report including information on performance, durability, battery life, display quality, portability, and overall user satisfaction?",Review,True
+"I would appreciate it if you could provide me with a collection of current popular French songs from various genres, including artists such as Stromae, Christine and the Queens, and Indila, that I can listen to for entertainment and language practice purposes.",MusicTool,True
+What is the capital of South Africa?,,False
+I need a meme related to cats and pizza. Can you create one?,MemeTool,True
+Who is the author of 'A Brief History of Time'?,,False
+Please give me the address and other details for J.P. Morgan Securities PLC in the UK.,CompanyInfoTool,True
+Does Best Buy happen to have discounts on their latest laptops?,Discount,True
+Name the smallest country in the world.,,False
+Who is the inventor of dynamite?,,False
+What is the difference between a noun and a verb?,,False
+"Can you assist me in paraphrasing my resume to emphasize my specific skills, achievements, and capabilities more effectively?",PolishTool,True
+What is the capital of Argentina?,,False
+Name the strongest natural material on Earth.,,False
+"I need a new vacuum cleaner under $200, can you find me some options?",ProductSearch,True
+Where can I find a restaurant in Japan that I can book a table at?,RestaurantBookingTool,True
+Define 'antimatter'.,,False
+"I'd like to see high-definition videos, preferably of the interior and exterior views, showcasing the daily activities, astronaut life, scientific experiments, and breathtaking footage of the International Space Station.",NASATool,True
+Define 'dipole moment'.,,False
+"I want to move to Austin, Texas and I need an apartment. I'm a student so I'm looking for something affordable and close to the university. Show me options within $1500 per month.",HouseRentingTool,True
+I would like an editing suggestion to enhance the vibrancy and warmth of my sunset photo.,MediaModifyTool,True
+Yo! I need to know the latest scores of my favorite sports teams ASAP! Can MixerBox News fetch that information for me?,NewsTool,True
+Name the planet with the most moons.,,False
+What is the capital of Egypt?,,False
+I'm attending an important event today. Could you give me astrological predictions for my sun sign to see how it aligns with my plans?,StrologyTool,True
+What is the capital of New Zealand?,,False
+I don't have time to watch this 30-minute documentary as I am currently occupied with various tasks and responsibilities that require my immediate attention and prioritization.,VideoSummarizeTool,True
+"I heard there was a scientific research paper about COVID-19 published recently, can you find it from a reputable medical journal's website?",PDF&URLTool,True
+I'm looking for talent profiles of experienced professionals who specialize specifically in the Blockchain sector.,JobTool,True
+What is the meaning of 'fastidious'?,,False
+My best friend's wedding is coming up and I'm clueless about what to gift her. Can you provide some ideas? She is an artist who loves painting and sketching.,GiftTool,True
+Can you help me decide between the Canon EOS R6 and the Nikon Z6 II? I need advice on which one is a better buy.,ProductComparison,True
+Name the layer of the atmosphere where weather occurs.,,False
+What is the meaning of 'paradigm'?,,False
+Who is credited with inventing the telephone?,,False
+Can you provide me guidance on how to craft a compelling summary for my resume?,ResumeTool,True
+Can you please provide me with a list of lawyers in Kyoto who specialize in intellectual property rights and are able to provide legal advice on this matter?,LawTool,True
+Who wrote 'The Divine Comedy'?,,False
+I need to find a reliable car repair service near me.,local,True
+Define 'matrix' in linear algebra.,,False
+Is there any chance of snow in Moscow tomorrow?,WeatherTool,True
+What is the capital of the Netherlands?,,False
+Who wrote 'Beloved'?,,False
+Is it possible to get the address details of a specific UK company?,CompanyInfoTool,True
+Can you help me locate startups that are seeking buyers?,ProductSearch,True
+Name the four oceans.,,False
+"Can you provide me with the current and accurate names of all the officers, including their respective positions or roles, working at PQR Limited?",CompanyInfoTool,True
+Who is the inventor of the radio?,,False
+What is the formula for force in classical mechanics?,,False
+"I've heard about a highly anticipated and immersive new game called ""Cyberpunk 2077"" which is set in a dystopian future. It would be greatly appreciated if you could offer detailed insights, including gameplay mechanics, storyline, graphics, and any exciting features, as well as provide authentic player reviews and opinions about the game.",GameTool,True
+"What are some popular tourist attractions in Rome that offer historical and cultural experiences, stunning architecture, and iconic landmarks, ultimately leaving visitors with unforgettable memories and opportunities for exploration and discovery?",TripAdviceTool,True
+Who is considered the father of modern physics?,,False
+Name the longest bone in the human body.,,False
+What is the currency of the United Kingdom?,,False
+How many continents are there?,,False
+Define the term 'metaphor'.,,False
+"I'm looking for the presentation slides from yesterday's meeting that include all the charts, graphs, and data analysis presented by the speaker.",DataRetrievalTool,True
+Who is the current Dalai Lama? (no real-time lookup needed for general definition),,False
+Name the largest planet in our solar system.,,False
+Is it possible to access the contents of a specific file within a code repository?,RepoTool,True
+"Hey, I heard there was an earthquake in the Philippines recently. Can you provide me with details?",EarthquakeTool,True
+Define 'tessellation' in geometry.,,False
+"I want to learn more about history, can you recommend a podcast that focuses on historical events and figures?",PodcastTool,True
+This PDF is so frustrating to navigate. I need assistance to find specific content quickly!,PDF&URLTool,True
+Define 'apoptosis' in cell biology.,,False
+What year did World War II end?,,False
+Who wrote 'Their Eyes Were Watching God'?,,False
+What is the meaning of the word 'ubiquitous'?,,False
+"Can you suggest some beginner-friendly, comprehensive, and up-to-date courses or specializations on Coursera specifically focused on artificial intelligence and machine learning?",CourseTool,True
+Define 'ecosystem'.,,False
+"Please provide an analysis of the sentiment for GBP/USD using daily candles for the past two weeks, including both bid and ask prices but excluding volume data.",ExchangeTool,True
+What does DNA stand for?,,False
+"Can you add more details to my reminder for paying bills by tagging it as ""important"" so that I can prioritize it?",NotesTool,True
+Who wrote the 'Harry Potter' series?,,False
+What is mitosis?,,False
+I'm looking for a multiplayer game to play with my friends on Xbox. Can you recommend any exciting and engaging multiplayer games that offer seamless online gameplay and a wide variety of gaming modes to enjoy together?,GameTool,True
+I'm a recent graduate with limited work experience. Can you suggest how to make my resume stand out to employers?,ResumeTool,True
+Define 'adaptive immunity'.,,False
+Who wrote 'Frankenstein'?,,False
+Can you suggest some courses or specializations on Coursera related to artificial intelligence and machine learning?,CourseTool,True
+Can you provide me with the latest financial information on Apple Inc. from the Golden knowledge graph?,CompanyInfoTool,True
+"My friend's birthday is coming up, and I want to buy a unique gift. Any suggestions for quirky stores around here?",HousePurchasingTool,True
+"""I'm planning to upgrade my laptop. Can you summarize the reviews on the Dell XPS range and tell me their good and bad points please?""",Review,True
+Generate a map image of San Francisco with a tilt of 90 degrees and a satellite-streets style.,MapTool,True
+"I went grocery shopping earlier and bought a bunch of fruits and vegetables. Can you add them to my daily totals?""",DietTool,True
+What are the laws about child custody after divorce according to UK law?,LawTool,True
+Who wrote 'On the Origin of Species'?,,False
+Who wrote 'The Stranger'?,,False
+What is the horoscope for Sagittarius?,StrologyTool,True
+Name the largest volcano in the solar system.,,False
+I want to give my video a vintage look with warm tones and a nostalgic feel. What filter should I use?,MediaModifyTool,True
+What is the formula for the area of a circle?,,False
+Who wrote 'Les Misérables'?,,False
+What is the speed of sound in air?,,False
+Name the inventor of the World Wide Web.,,False
+Who painted 'Guernica'?,,False
+I'm planning a hiking trip and need to buy some outdoor gear. Can you recommend some durable and waterproof products from Uniket?,ShoppingAssistant,True
+I want to make a meme about my dog's silly antics. Can you give me some ideas?,MemeTool,True
+"I'm looking for the closest bookstore in my area, could you help me find one?",local,True
+I want to find a restaurant that offers a unique dining experience in London.,RestaurantBookingTool,True
+Can you tell me which charity organizations focus on children's education in Africa?,CharityTool,True
+Is there any footage available from the Voyager 1 space probe?,NASATool,True
+I want to know the current exchange rate for Mexican pesos to Canadian dollars. Can you check that using the Exchange Rates plugin?,ExchangeTool,True
+"The founding date of Tesla, the American electric vehicle and clean energy company, is July 1, 2003.",CompanyInfoTool,True
+Define 'osmoregulation'.,,False
+What is the formula for kinetic energy?,,False
+"Can you recommend a good science fiction book that has elements of adventure, futuristic technology, and explores the concept of artificial intelligence while maintaining a gripping and thought-provoking storyline?",BookTool,True
+Who wrote 'Pride and Prejudice'?,,False
+I want to surprise my parents with a unique and unforgettable experience that will make their anniversary truly special and create lasting memories for them.,GiftTool,True
+"I can't stand the music that's popular right now, it's just not my taste.",MusicTool,True
+What is the longest-reigning monarch in British history known for?,,False
+Define 'entropy' in thermodynamics.,,False
+Is there any documentation available for the new software update?,DataRetrievalTool,True
+Can you explain how to track my order status on Uniket?,ShoppingAssistant,True
+Define 'allegory'.,,False
+"Please retrieve the specific document that I previously uploaded, specifically regarding project guidelines.",DataRetrievalTool,True
+I'm looking for details about the United Way and its financial performance.,CharityTool,True
+What is the boiling point of water in Celsius?,,False
+I need flashcards for a literature assignment on Shakespeare's plays. Could you assist me with that?,MemoryTool,True
+Who wrote 'Slaughterhouse-Five'?,,False
+Define 'recursion' in computer science.,,False
+"Please show me a high-resolution picture taken by the Voyager spacecraft during its interstellar journey, capturing the stunning view of the outer planets and their unique features, including their mesmerizing atmospheres, distinct rings, and intriguing moons.",NASATool,True
+"I'm hosting a party and need a playlist with a mix of genres, including popular hits from the 80s, energetic dance tracks from the 90s, contemporary pop songs, and some smooth jazz for background ambiance.",MusicTool,True
+What is the chemical formula for methane?,,False
+Name the largest moon of Saturn.,,False
+Who wrote 'Things Fall Apart'?,,False
+What is the capital of India?,,False
+What is the sum of angles in a triangle?,,False
+This is so frustrating! I need to find papers related to my work.,ResearchHelper,True
+"As a freelancer, I am currently seeking assistance in designing and developing a highly professional, visually appealing website that effectively showcases my extensive range of skills and portfolio.",WebsiteTool,True
+Define 'syntax' versus 'semantics' in linguistics.,,False
+What is the largest mammal?,,False
+I'm having trouble understanding quantum physics. Can you paraphrase the basics for me?,PolishTool,True
+Who wrote 'The Great Gatsby'?,,False
+Who is the inventor of the cotton gin?,,False
+Who developed the polio vaccine?,,False
+Name the inventor of the light bulb.,,False
+"I can't believe how difficult it is to find a rental car in San Francisco! Find me a car ASAP!""",TripTool,True
+What is the capital of Canada?,,False
+I need assistance with my flashcard practice. What should I do next?,MemoryTool,True
+What does 'HTTP' stand for?,,False
+"I want to compare the prices, features, and reviews of various smart TVs available in the market, with a specific focus on their display quality, connectivity options, and smart functionalities, in order to make an informed decision and find the best value for my money.",ProductComparison,True
+Who wrote 'War and Peace'?,,False
+I'm looking for a laptop with at least 16GB of RAM and a dedicated graphics card. Can you help me find one on Kakaku.com?,ProductSearch,True
+What is the difference between a simile and a metaphor?,,False
+What is the Pythagorean theorem?,,False
+Can you tell me the penalties for driving without a license in California?,LawTool,True
+Name the world's largest lake by surface area.,,False
+Can you find me relevant papers?,ResearchHelper,True
+Who discovered penicillin?,,False
+Name the world's most populated city.,,False
+I would like assistance in finding a pet-friendly apartment available for rent specifically in the city of Vancouver.,HouseRentingTool,True
+Name the three states of matter.,,False
+"I would like to gain a comprehensive understanding of the Search Engine Optimization (SEO) performance and effectiveness of my recently published article in order to assess its visibility, ranking, and overall success in driving organic traffic from search engines.",SEOTool,True
+Who wrote 'Wuthering Heights'?,,False
+Is there any way to view images of the International Space Station construction over the years?,NASATool,True
+What is the capital of Sweden?,,False
+Who wrote 'One Hundred Years of Solitude'?,,False
+What is the meaning of 'verbose'?,,False
+Define 'prime number'.,,False
+"What does the horoscope say for Cancer on December 5, 2022?",StrologyTool,True
+What is the cloud cover percentage in Paris today?,WeatherTool,True
+"I'm planning a trip to Paris for a week in July with my family, and I was wondering if you could provide me with some suggestions for affordable hotels in the city center that are family-friendly and have easy access to public transportation?",TripAdviceTool,True
+Define 'inflation' in economics.,,False
+What is the rarest blood type in humans?,,False
+Hi there! I need assistance in finding the most lucrative deals and exclusive coupons specifically for online shopping that are currently available today.,Discount,True
+I'm interested in learning about different cultures and traditions. Can you recommend any podcasts that cover this?,PodcastTool,True
+Who painted 'The Birth of Venus'?,,False
+Can I check multiple domain names at once?,URLTool,True
+What is the largest bird in the world?,,False
+What does the acronym NASA stand for?,,False
+"I'm interested in exploring open-world games that provide immersive virtual environments, with a wide range of diverse and visually stunning landscapes to navigate through. Additionally, I would prefer games that offer a rich storyline and a dynamic, non-linear gameplay experience with multiple quests, missions, and activities to engage in.",GameTool,True
+"Hi there, Chatbot! I'm organizing a house party next week and I want to impress my friends with a diverse and upbeat playlist. Do you have any recommendations on how to create a killer playlist using WhizList?",MusicTool,True
+What is the perimeter of a square with side 5?,,False
+Define 'cardinal' versus 'ordinal' numbers.,,False
+"Could you please provide detailed information on the mission, as well as the key individuals involved, of the non-profit organization called ""World Wildlife Fund""?",CharityTool,True
+What is the chemical formula for table salt?,,False
+Who wrote 'The Bell Jar'?,,False
+I need to know the contents of a README file in a Git repository. Can you help me retrieve that information?,RepoTool,True
+"Ugh, I hate shopping in Korea. I can never find what I'm looking for. It's such a waste of time!",ProductSearch,True
+"I am seeking assistance in enhancing my resume specifically tailored for a finance position, with the intention of making it distinct and striking to potential employers.",ResumeTool,True
+"""Can you provide a review analysis for the Xbox Series X? I'd like to know its advantages and disadvantages.""",Review,True
+Show me a diagram of how a computer processes information.,ChartTool,True
+Who painted the ceiling of the Sistine Chapel?,,False
+I need a meme that effectively uses vibrant colors and humorous text to highlight the sheer joy and delight people experience while indulging in the act of eating deliciously creamy and cold ice cream on a sunny day.,MemeTool,True
+"I need to find a highly skilled and reputable lawyer who has extensive experience specifically in corporate law, and who is based in Yokohama, Japan.",LawTool,True
+Can you help me find the best online store deals and discounts available right now by suggesting reliable websites or platforms where I can find a wide range of products with substantial price reductions and promotional offers?,Discount,True
+What is photosynthesis?,,False
+"I need recent research papers, published within the last five years, specifically focusing on the cognitive, emotional, and physical benefits of mindfulness meditation in adults aged 25-50 years, with a particular emphasis on its effects on stress reduction, anxiety management, and overall well-being.",ResearchHelper,True
+Define 'parsimony' in scientific reasoning.,,False
+What are the primary colors of light?,,False
+What does the upcoming planetary alignment mean for Taurus?,StrologyTool,True
+Name the gas most abundant in Earth's atmosphere.,,False
+Can I post a conversation to my Wordpress blog?,WebsiteTool,True
+I'm so angry! All these website builders are a complete waste of time and money.,WebsiteTool,True
+I've been doing a lot of online shopping and it's become a bit chaotic. Can you supply a QR code for my cart to help me stay organized?,ShoppingAssistant,True
+"Show me a map with the coordinates 6895,6917, please.",MapTool,True
+Can you guide me in choosing between a MacBook Pro and a Dell XPS 15? I need a laptop for graphic designing.,ProductComparison,True
+"I'm looking for specific academic journal articles, research papers, and studies on the latest advancements, challenges, and breakthroughs in the development of renewable energy technologies specifically in the fields of solar, wind, hydro, biomass, and geothermal energy.",ResearchFinder,True
+What is the smallest unit of life?,,False
+I can't decide whether to get a Tesla Model 3 or a Chevy Bolt. Could you help me compare them?,ProductComparison,True
+I want to read a heartwarming romance novel. Any suggestions?,BookTool,True
+Can you please add some text to this image to make it more informative and engaging?,MediaModifyTool,True
+Who is the Greek goddess of wisdom?,,False
+"What are the detailed steps involved in the complex and multi-stage process of purchasing a residential property, commonly known as a home, in the vast and geographically diverse nation of Canada, including but not limited to: conducting thorough research on the local real estate market, securing mortgage pre-approval from financial institutions, engaging the services of a reputable real estate agent, attending property viewings and inspections, negotiating an offer and agreement of purchase and sale, arranging for a professional appraisal, undertaking a comprehensive home inspection, fulfilling any necessary legal or regulatory requirements, submitting an offer to purchase, requesting any applicable contingencies, completing the necessary paperwork, coordinating with a lawyer or notary for the transaction, conducting a final walkthrough, signing the official closing documents, transferring funds for the purchase, registering the property title, obtaining insurance coverage, and finally taking possession of the newly acquired home in Canada?",HousePurchasingTool,True
+Who wrote 'A Room of One's Own'?,,False
+"I would like to request detailed information about any recent political, economic, and social developments in Italy.",NewsTool,True
+Who was Cleopatra?,,False
+"I'm looking for some new movie recommendations; specifically, I would appreciate suggestions for recent releases from different genres such as action, comedy, thriller, and drama.",MediaTool,True
+What are some effective strategies for time management?,PolishTool,True
+What is the chemical symbol for gold?,,False
+Name the planet known as the Red Planet.,,False
+What is the chemical symbol for sodium?,,False
+I want to watch a live sports event. Can you help me find one?,MediaTool,True
+Define 'Doppler effect'.,,False
+What are some popular neighborhoods in San Francisco that have good schools?,HousePurchasingTool,True
+What are the top rated machine learning courses on Coursera?,CourseTool,True
+"I'm planning to buy a new laptop and I would like some recommendations on the latest models available in the market, along with their specifications, prices, and customer reviews.",Discount,True
+"I urgently require assistance in paraphrasing an entire chapter from a specific book, as it is a mandatory component of my assignment that needs to be submitted.",PolishTool,True
+What is the newest breaking news?,NewsTool,True
+"I'm considering buying a new camera, can you give me a summary of the pros and cons for different models?",Review,True
+"What are some must-visit historical sites in Rome that showcase the rich ancient Roman history and cultural heritage, providing users with an immersive experience of iconic landmarks such as the Colosseum, Roman Forum, Pantheon, and the Vatican City?",TripAdviceTool,True
+"Can you thoroughly analyze and evaluate the reviews of various SSDs, taking into consideration factors such as performance, reliability, durability, storage capacity, and user satisfaction, and provide a precise recommendation declaring the absolute best SSD available in the market?",Review,True
+I'm new to this area. Can you suggest some affordable neighborhoods in San Francisco?,HousePurchasingTool,True
+Name the bones that make up the human skull.,,False
+Define 'cytoplasm'.,,False
+What is the capital of Germany?,,False
+Who developed the smallpox vaccine?,,False
+Define 'altruism'.,,False
+Name the largest island in the world.,,False
+Define 'plate tectonics'.,,False
+What is the largest country by land area?,,False
+Is there a task management plugin available that I can use to efficiently stay organized and effectively remember all my tasks and responsibilities?,NotesTool,True
+Define 'covalent bond'.,,False
+Can you provide me with weather updates for today so that I can decide whether I should wear a jacket or not?,WeatherTool,True
+Define 'enzyme' in biochemistry.,,False
+"Please parse through this specific video, which is a comprehensive explanation of quantum mechanics, and meticulously analyze the content to extract relevant information. Subsequently, kindly provide a meticulously-written summary that encapsulates the key concepts and findings discussed in the video.",VideoSummarizeTool,True
+Can you add a reminder for me to buy groceries tomorrow?,NotesTool,True
+What is the largest desert in the world?,,False
+What is the world's largest coral reef system?,,False
+What language is primarily spoken in Brazil?,,False
+Who is the founder of Microsoft?,,False
+Name the smallest ocean on Earth.,,False
+Name the most spoken language in the world by native speakers.,,False
+Define the word 'serendipity'.,,False
+Who is the author of 'The Hobbit'?,,False
+What is the smallest prime number?,,False
+I'm frustrated with the lack of good music playlists available. Can you create and find the best ones for me without any hassle?,MusicTool,True
+How can I showcase my leadership skills on my resume for a managerial position?,ResumeTool,True
+What is the capital of Ireland?,,False
+Define 'ecology'.,,False
+Who painted 'American Gothic'?,,False
+Who painted 'The Persistence of Memory'?,,False
+What is the speed of Earth's rotation at the equator?,,False
+I need to find a clothing store for a special occasion. Any suggestions?,local,True
+Define 'ionic bond'.,,False
+Hi Chatbot! I'm looking for scholarly articles about the potential benefits of meditation on mental health. Can you provide me with some useful resources?,ResearchFinder,True
+What podcasts are indexed on PodcastIndex.org?,PodcastTool,True
+I am a Sagittarius. Can you tell me which days would be most favorable for me to make big decisions according to astrology?,StrologyTool,True
+Who wrote 'Moby-Dick'?,,False
+I'm new in town and urgently searching for a highly skilled and trustworthy mechanic who can efficiently handle all types of automotive repairs and maintenance services for my vehicle.,local,True
+I'd like to see the astronomy picture NASA featured today. Can you show it to me?,NASATool,True
+"Can you give me the latest news from BBC, specifically focusing on updates related to politics, international affairs, technology, and entertainment?",NewsTool,True
+Who wrote 'For Whom the Bell Tolls'?,,False
+Can you give me the weather forecast for the next three days?,WeatherTool,True
+Who developed the theory of relativity?,,False
+What is an antonym of 'brave'?,,False
+Is there a plugin available that can help me manage my to-do list?,NotesTool,True
+What is the capital of Greece?,,False
+Name the smallest bone in the human body.,,False
+I need to memorize important dates and events for a literature assignment. Can you generate flashcards for me?,MemoryTool,True
+Define 'isotope'.,,False
+Who wrote the play Hamlet?,,False
+"I have a lengthy legal document, can you give me a concise summary?",PDF&URLTool,True
+Name the only continent without reptiles or snakes.,,False
+"Please provide me with comprehensive information regarding the most recent earthquake that occurred in Japan, including all available details and data.",EarthquakeTool,True
+Who wrote 'The Catcher in the Rye'?,,False
+Show me luxury villas with ocean views in Mallorca.,HousePurchasingTool,True
+Who wrote 'The Odyssey'?,,False
+I'm going on a road trip. Can you provide a map image for the route between San Francisco and Los Angeles using the streets style?,MapTool,True
+What is the main ingredient in bread?,,False
+"I want to specifically improve my website's visibility on popular social media platforms such as Facebook, Instagram, Twitter, and LinkedIn, targeting a broad range of potential users and increasing engagement with regular content updates, targeted advertising campaigns, and strategic partnerships with influencers in the relevant industry.",SEOTool,True
+How can I list all the repositories for a specific user?,RepoTool,True
+Can you help me create a bar chart comparing sales data from different quarters of the year?,ChartTool,True
+I need some exclusive discount codes that can be applied for online shopping on various popular e-commerce platforms.,Discount,True
+What were the key points from the meeting with the project team last week?,DataRetrievalTool,True
+"I'm planning a trip to Japan on 10th June, and I want to book a traditional sushi restaurant near Tokyo Station in advance for a group of four people at 7 o'clock in the evening.",RestaurantBookingTool,True
+Can you help me rephrase this AI-generated content to make it sound more like something a human would say?,PolishTool,True
+Name the smallest planet in our solar system.,,False
+Define 'biodiversity'.,,False
+What is the current weather in Seattle?,WeatherTool,True
+I want to watch a documentary that will teach me something new. Can you help me find one on MixerBox FreecableTV?,MediaTool,True
+"Could you please find the current price to earnings ratio (P/E ratio) for the company ""World of Women""?",FinanceTool,True
+Who painted the Mona Lisa?,,False
+Who was the first woman to win a Nobel Prize?,,False
+What is the capital of Australia?,,False
+Can you help me create a professional resume for a customer service job?,ResumeTool,True
+"I can't believe there was another earthquake! I need to know the latest information about it right now.""",EarthquakeTool,True
+What does the suffix '-itis' mean in medical terms?,,False
+I'm really angry about the rates being charged at hotels these days! Help me find a more reasonably priced accommodation for my next vacation.,TripTool,True
+What is Newton's third law of motion?,,False
+Define 'inertia'.,,False
+Who wrote 'Anna Karenina'?,,False
+I've just finished reading a historical fiction novel and loved it. Can your tool recommend me similar books to read next?,BookTool,True
+Define 'monsoon'.,,False
+Who painted 'Starry Night'?,,False
+My friend is feeling down and I want to cheer them up with a humorous meme. Can you help me with that?,MemeTool,True
+"I have some amazing conversation ideas that cater to users' specific interests, preferences, and desired topics of conversation, ensuring a highly engaging and interactive experience for users.",WebsiteTool,True
+What is the meaning of 'pragmatic'?,,False
+I can't find any available domain names. Can you help me find one?,URLTool,True
+I want to make a reservation at a restaurant in Japan. Can you help me find one?,RestaurantBookingTool,True
+"Can you recommend a good TV show with compelling characters, an engaging plot, and high production value to watch?",MediaTool,True
+What is the square root of 144?,,False
+"I'm curious to know more about this travel vlog and its content, however, I prefer not to watch the entire video. Could you please provide me with a concise overview or summary instead?",VideoSummarizeTool,True
+I need help finding a unique and exciting gift for my adventurous cousin who loves hiking and camping.,GiftTool,True
+"Please provide a detailed analysis of the sentiment for GBP/USD using daily candlestick charts for the last two weeks, including both bid and ask prices. However, please exclude any volume data from the analysis.",ExchangeTool,True
+I want to keep track of my daily food intake. Can you help me with that?,DietTool,True
+Explain what gravity is in one sentence.,,False
+What is the capital of Norway?,,False
+"Are there any outdoor adventure tours in Sydney that cater to various activities like hiking, rock climbing, water sports, and wildlife exploration, providing participants with a chance to experience the breathtaking scenery of the city and its surrounding natural wonders?",TripAdviceTool,True
+Name the gas plants release during photosynthesis.,,False
+Save my hotel reservation details for my upcoming stay in New York.,DataRetrievalTool,True
+What is the slowest land animal?,,False
+I can't believe how terrible the service was at the restaurant I went to today. Can you recommend any good restaurants near me?,local,True
+Who is the author of 'The Iliad'?,,False
+Who wrote 'Romeo and Juliet'?,,False
+Can you kindly fetch the most recent study on artificial intelligence advancements published within the last six months with a focus on the impact of machine learning algorithms and deep neural networks?,ResearchFinder,True
+Who wrote 'The Picture of Dorian Gray'?,,False
+Are there any podcasts about religion and spirituality?,PodcastTool,True
+Can you help me find a gift for my friend who recently got promoted at work?,GiftTool,True
+I'm curious about true crime podcasts. Any recommendations?,PodcastTool,True
+"Hello! I want to stay organized and be productive, can you assist me in using TickTick for managing my tasks effectively?",NotesTool,True
+Name the seven colors of the rainbow.,,False
+"I'm specifically interested in obtaining comprehensive information regarding the organizational structure, decision-making processes, and financial records of the American Red Cross.",CharityTool,True
+Name the only mammal capable of true flight.,,False
+Define 'meritocracy'.,,False
+My colleague is retiring. What's a good gift to give as a farewell?,GiftTool,True
+Who is the founder of psychoanalysis?,,False
+I need a detailed and visually appealing heat map that clearly illustrates the precise distribution and variation of annual rainfall across various regions.,ChartTool,True
+Show me a list of open-source repositories related to machine learning.,RepoTool,True
+I'm planning a trip to a region that is prone to earthquakes. Can you provide me with the most recent seismic activity in that area?,EarthquakeTool,True
+What is the chemical formula for water?,,False
+Who painted 'The Last Supper'?,,False
+"This YouTube video efficiently explains complex financial concepts in a simplified manner, catering to users' requests for a comprehensive and easy-to-understand breakdown of intricate financial topics.",VideoSummarizeTool,True
+What is the difference between mass and weight?,,False
+Who wrote 'To Kill a Mockingbird'?,,False
+Define 'osmosis' in biology.,,False
+Who painted 'The Scream'?,,False
+Define 'kinetic theory of gases'.,,False
+I'm looking for a ryokan (traditional inn) in Hakone.,TripTool,True
+"I need a highly distinctive and memorable domain name for my exclusive online store, which specializes in the sale of meticulously crafted and one-of-a-kind handmade jewelry pieces.",URLTool,True
+Define 'natural selection'.,,False
+What is the past tense of the verb 'to run'?,,False
+Define 'homeostasis'.,,False
+What is the area of a rectangle with sides 7 and 4?,,False
+Who was the first president of the United States?,,False
+What is the meaning of 'antithesis'?,,False
+Who wrote 'The Sound and the Fury'?,,False
+Define 'democracy'.,,False
+Can you provide me with a list of upcoming events or festivals happening in Singapore within the next month?,TripAdviceTool,True
+"I want to know the latest advancements in neuroscience, such as new findings on brain mapping techniques, developments in neuroimaging technologies, breakthroughs in the understanding of neural pathways, and cutting-edge research on brain-computer interfaces.",ResearchFinder,True
+I'm curious to know if there have been any earthquakes in the Philippines in the past week.,EarthquakeTool,True
+I'm looking for a video on Daily Motion that explains how to make chocolate chip cookies. Can you find it for me?,VideoSummarizeTool,True
+Could you present a QR code for my shopping cart so I can easily scan and view its contents?,ShoppingAssistant,True
+Define 'inertial frame of reference'.,,False
+What is the freezing point of water in Fahrenheit?,,False
+Can you help me create flashcards for a history lesson on the French Revolution?,MemoryTool,True
+I want to know the risk metrics of the S&P 500 ETF.,FinanceTool,True
+Define 'oligarchy'.,,False
+My child is not interested in reading. Can you recommend any books that might get them excited?,BookTool,True
+Name the most abundant element in the universe.,,False
+Define 'symbiosis'.,,False
+I want to know the historical exchange rate between GBP and JPY.,ExchangeTool,True
+"I'm starting a small business in California and would like to know the legal requirements, necessary permits and licenses, and any specific regulations or tax obligations I need to consider and adhere to. Additionally, I would appreciate information on resources or programs available to support small business owners in California.",LawTool,True
+I'm planning a trip to the Greek islands. Can you help me find ferry schedules and prices?,TripTool,True
+"I want to maintain a food diary that includes detailed information on the number of calories, grams of fat, grams of protein, and grams of carbs for each food item consumed.",DietTool,True
+What is Avogadro's number used for?,,False
+What is the capital of Denmark?,,False
+I want to make my sunset photo look more vibrant and colorful. Can you suggest a filter?,MediaModifyTool,True
+Who invented the printing press?,,False
+What is the standard atmospheric pressure at sea level?,,False
+"Please provide me with the up-to-date market data, including details such as current price, trading volume, and market capitalization, as well as any available financial filings specifically related to Bitcoin.",FinanceTool,True
+What is the area of a triangle with base 4 and height 3?,,False
+Who is the Greek god of the sea?,,False
+Define 'homologous structures' in biology.,,False
+Explain the process of cellular respiration using a diagram.,ChartTool,True
+What is the Fibonacci sequence?,,False
+"I'm currently in the process of researching and organizing a trip to Machu Picchu, aiming to visit this stunning archaeological wonder located in the Andes Mountains of Peru.",MapTool,True
+Who composed 'The Four Seasons'?,,False
+Who composed the Ninth Symphony?,,False
+"I need assistance from experts in the field to thoroughly explore and analyze the vast literature available on various renewable energy sources, including solar, wind, hydroelectric, geothermal, and biomass energy.",ResearchHelper,True
+Who is known as the father of geometry?,,False
+Who is the author of 'Invisible Man'?,,False
+I need information on the latest research in artificial intelligence.,PDF&URLTool,True
+Define 'gerrymandering'.,,False
+What is the largest organ in the human body?,,False
+Name the official language of China.,,False
+Who composed 'The Magic Flute'?,,False
+Display to me the precise and exact measure of the cryptocurrency Bitcoin's volatility throughout the entirety of the previous year.,FinanceTool,True
+Define 'sovereignty'.,,False
+Compare the transaction volume of Bitcoin and Ethereum for the past year.,FinanceTool,True
+I'm looking for a restaurant in Japan that I can make a reservation at. Can you assist?,RestaurantBookingTool,True
+I'm struggling to come up with SEO-friendly content ideas for my website. Can you give me some keyword suggestions to get started?,SEOTool,True
+Name the three branches of the U.S. government.,,False
+I need to boost my online presence and reach more customers. Can you suggest some strategies for writing effective social media content?,SEOTool,True
+Find me the latest news on artificial intelligence advancements in healthcare.,ResearchHelper,True
+Can I find information about a specific game?,GameTool,True
+"Please provide the overall sentiment for EUR/USD using ten-minute candles for the past six hours, taking into account factors such as price movement, trading volume, and any relevant news or events impacting the currency pair.",ExchangeTool,True
+What is the longest river in the world?,,False
+Who wrote 'The Brothers Karamazov'?,,False
+Who wrote 'Heart of Darkness'?,,False
+"Can you recommend a highly experienced and qualified language tutor, preferably with a master's degree in Spanish, who specializes in exam preparation for advanced levels of Spanish proficiency and has a track record of helping students achieve outstanding results in language examinations such as DELE or SIELE?",CourseTool,True
+Who is the author of 'A Tale of Two Cities'?,,False
+Can you provide me with research papers on the effects of COVID-19 on mental health?,ResearchFinder,True
+Who wrote 'Brave New World'?,,False
+What is the capital of Switzerland?,,False
+I want to redecorate my living room. Can you show me some modern furniture options available on Uniket?,ShoppingAssistant,True
+Define 'taxonomy' in biology.,,False
+What is the capital of Spain?,,False
+What is the meaning of 'austere'?,,False
+Who wrote 'Crime and Punishment'?,,False
+What is the smallest country in Africa?,,False
+Define 'photosynthesis' in one sentence.,,False
+Can you help me sort through the options for DSLR cameras? I've narrowed it down to the Nikon D750 and Canon 5D Mark IV.,ProductComparison,True
+Can you direct me to the contact page on this website? I'd like to get in touch with the company for further information.,PDF&URLTool,True
+Can you please assist me in finding the cheapest digital camera on haffprice.com? I need help in comparing prices and features of different models to ensure I make the most cost-effective choice.,ProductSearch,True
+What is the tallest mountain on Earth?,,False
+I want to watch a good action-adventure movie. Any suggestions?,MediaTool,True
+Who painted 'Las Meninas'?,,False
+Hi there! Can you help me plan my journey from New York City to Los Angeles?,MapTool,True
+Name the largest land carnivore.,,False
+"I am looking for a domain name for my new blog. Can you see if ""adventureblogger.com"" is available?",URLTool,True
+Could you please provide me with the latest news headlines specific to the United States for today?,NewsTool,True
+What is the longest war in recorded history known as?,,False
+"I'm interested in learning German to effectively communicate with my German colleagues, understand technical documents written in German, and enhance my overall engineering skills required for my job.",CourseTool,True
+"Can you provide assistance by thoroughly evaluating my website and identifying any specific technical SEO issues, which could potentially hinder its optimal performance and ranking on search engines?",SEOTool,True
+The user specifically requests a condo in Los Angeles with a minimum of 2 bathrooms.,HouseRentingTool,True
+"I want to learn about famous landmarks around the world, can you generate flashcards for me?",MemoryTool,True
+Name the largest waterfall by volume.,,False
+Name the chemical element with symbol Fe.,,False
+Who is the author of '1984'?,,False
+I need a funny and relatable meme to show my overwhelming excitement about finally reaching the weekend after a long and tiring work week.,MemeTool,True

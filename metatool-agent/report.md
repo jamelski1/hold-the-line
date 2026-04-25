@@ -43,13 +43,21 @@ The first example's `tool_name` is patched at render time to be the first tool i
 
 ## 4. Results
 
-Computed by `src/evaluate.py` with `sklearn.metrics`. Positive class = "tool needed". CSR (Correct Selection Rate) is conditional on rows where the gold answer requires a tool AND the model said `tool_needed=true`; the eligible-row count is shown in parentheses.
+Computed by `src/evaluate.py` with `sklearn.metrics`. Positive class = "tool needed". CSR is the MetaTool paper definition: *correct tool selections / all gold-positive samples* (denominator = 235 across every model; a missed positive counts as an incorrect selection).
 
-| Model                        | Accuracy | Precision | Recall | F1     | CSR (strict) | CSR (with fuzzy) |
-|-----------------------------|---------:|----------:|-------:|-------:|-------------:|-----------------:|
-| `gemma2-2b-it`              |   0.883  |    0.833  |  0.957 |  0.891 |  0.711 (225) |    0.711 (225)   |
-| `llama3.2-3b-instruct`      |   0.881  |    0.848  |  0.928 |  0.886 |  0.766 (218) |    0.766 (218)   |
-| `qwen2.5-7b-instruct-4bit`  | **0.951**|  **1.000**|  0.902 |**0.949**|**0.858 (212)**|  **0.858 (212)** |
+| Model                        | Accuracy | Precision | Recall | F1     |   CSR    | CSR (with fuzzy) |
+|-----------------------------|---------:|----------:|-------:|-------:|---------:|-----------------:|
+| `gemma2-2b-it`              |   0.883  |    0.833  |  0.957 |  0.891 |   0.681  |     0.681        |
+| `llama3.2-3b-instruct`      |   0.881  |    0.848  |  0.928 |  0.886 |   0.711  |     0.715        |
+| `qwen2.5-7b-instruct-4bit`  | **0.951**|  **1.000**|  0.902 |**0.949**| **0.774**|   **0.774**      |
+
+**Diagnostic CSR breakdown.** The same correct-tool-selection counts can also be reported with the denominator restricted to *positives where the model attempted a tool* — this isolates pure tool-selection ability from the binary-classification ability captured by recall:
+
+| Model                       | Correct tool picks | Attempted (model said yes) | CSR-attempted | CSR (paper) |
+|----------------------------|-------------------:|---------------------------:|--------------:|------------:|
+| `gemma2-2b-it`             | 160                | 225                        | 0.711         | 0.681       |
+| `llama3.2-3b-instruct`     | 167                | 218                        | 0.766         | 0.711       |
+| `qwen2.5-7b-instruct-4bit` | 182                | 212                        | 0.858         | 0.774       |
 
 Auxiliary diagnostics (from `metrics_<model>.json`):
 
@@ -63,8 +71,8 @@ Auxiliary diagnostics (from `metrics_<model>.json`):
 
 - **Qwen 2.5 7B (4-bit) is the clear winner** on every metric. Notably it achieves **perfect precision (1.000)** — across all 235 negative queries it never once said `tool_needed=true`. It pays for that with slightly lower recall (0.902) than the smaller models, meaning it is more conservative about invoking tools.
 - **Gemma 2B has the highest recall (0.957) but the lowest precision (0.833)**: it is the most eager of the three to invoke a tool, including on knowledge questions that need none. F1 ends up nearly identical to Llama because the precision/recall trade-off is roughly symmetric.
-- **Llama 3.2 3B sits between the two on binary metrics** but its CSR is **5.5 percentage points higher than Gemma's** (0.766 vs 0.711). When Llama does say "tool needed", it picks the right tool more often, even though it triggers tool use slightly less frequently.
-- **CSR-strict equals CSR-with-fuzzy for every model** — fuzzy normalization rescued at most one prediction (Llama). The headline tool-selection numbers therefore reflect exact-match performance and are not propped up by fuzzy fallback. This was tracked deliberately to satisfy the brief's requirement.
+- **Llama 3.2 3B sits between the two on binary metrics** but is meaningfully better at picking the right tool when it commits: CSR-attempted of 0.766 vs Gemma's 0.711.
+- **CSR ≈ CSR-with-fuzzy for every model.** Fuzzy normalization rescued at most one prediction (Llama). Headline tool-selection numbers therefore reflect strict exact-match performance, not propped up by fuzzy fallback.
 - **Zero malformed JSON across all three models.** The single shared prompt with two worked examples and the explicit "Output ONLY valid JSON" instruction was sufficient to get parseable output without any model-specific tweaks.
 - **Hallucinated tool names**: Gemma named a non-existent tool 10 times, Llama 15 times, Qwen never. This pattern matches general findings that larger instruction-tuned models adhere more reliably to closed-vocabulary outputs.
 
