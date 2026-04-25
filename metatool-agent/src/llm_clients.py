@@ -89,13 +89,20 @@ class LLMClient:
         """
         import torch
         messages = [{"role": "user", "content": prompt}]
-        input_ids = self.tokenizer.apply_chat_template(
+        # apply_chat_template returns a bare tensor on older transformers and a
+        # BatchEncoding on newer versions. Forcing return_dict=True normalizes
+        # this so we always get attention_mask alongside input_ids.
+        encoded = self.tokenizer.apply_chat_template(
             messages,
             add_generation_prompt=True,
             return_tensors="pt",
-        ).to(self.model.device)
-
-        attention_mask = torch.ones_like(input_ids)
+            return_dict=True,
+        )
+        input_ids = encoded["input_ids"].to(self.model.device)
+        if "attention_mask" in encoded:
+            attention_mask = encoded["attention_mask"].to(self.model.device)
+        else:
+            attention_mask = torch.ones_like(input_ids)
 
         do_sample = temperature > 0.0
         gen_kwargs = dict(
