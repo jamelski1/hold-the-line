@@ -1,0 +1,28 @@
+# Data files (downloaded at runtime)
+data/big_tool_des.json
+data/all_clean_data.csv
+data/sampled_data.csv
+data/MetaTool/
+
+# Results — keep structure, ignore generated artifacts
+results/predictions_*.csv
+results/metrics_*.json
+results/summary.csv
+results/malformed_*.jsonl
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# HF cache (if run locally)
+.hf_cache/
