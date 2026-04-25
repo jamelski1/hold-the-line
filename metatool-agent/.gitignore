@@ -4,10 +4,9 @@ data/all_clean_data.csv
 data/sampled_data.csv
 data/MetaTool/
 
-# Results — keep structure, ignore generated artifacts
+# Results — keep summary.csv (final headline numbers); ignore bulky per-row artifacts.
 results/predictions_*.csv
 results/metrics_*.json
-results/summary.csv
 results/malformed_*.jsonl
 
 # Python

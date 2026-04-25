@@ -33,41 +33,74 @@ The first example's `tool_name` is patched at render time to be the first tool i
 
 ## 3. Sampled dataset summary
 
-- **Source:** `all_clean_data.csv` from the MetaTool repository (positives) + a curated list of 120+ knowledge/reasoning prompts (negatives, hand-authored).
-- **Per-tool positives:** 5 (or fewer if a tool has fewer than 5 rows in the source — flagged at sampling time).
-- **Negatives:** balanced to match positive count, sampled without replacement from the curated pool.
-- **Total:** ~240 positive + ~240 negative ≈ 480 queries.
-- **Seed:** `RANDOM_SEED = 42` (set on `random` and `numpy`).
-- **Order:** rows are shuffled after concatenation so prompt position can't trivially leak the label.
-
-> Per-tool counts and the actual totals will be filled in after running the notebook (cell "3. Build sampled dataset").
+- **Source:** `all_clean_data.csv` from the MetaTool repository (positives) + a curated list of 250 hand-authored knowledge/reasoning prompts (negatives). MetaTool as packaged ships no non-tool subset, so negatives were synthesized; this is documented in §6 as a limitation.
+- **Per-tool positives:** 5 — every tool has exactly 5 rows (min = max = 5).
+- **Negatives:** 235, balanced 1:1 with positives, sampled without replacement from the 250-query curated pool.
+- **Total:** **470 queries** (235 positive + 235 negative).
+- **Tools covered:** **47** (the dataset has 47 tools, not the 48 referenced in the original brief).
+- **Seed:** `RANDOM_SEED = 42`, set on `random` and `numpy` inside `src/sampling.py`.
+- **Order:** rows are shuffled after concatenation so prompt position cannot trivially leak the label.
 
 ## 4. Results
 
-> Filled in from `results/summary.csv` after the run.
+Computed by `src/evaluate.py` with `sklearn.metrics`. Positive class = "tool needed". CSR (Correct Selection Rate) is conditional on rows where the gold answer requires a tool AND the model said `tool_needed=true`; the eligible-row count is shown in parentheses.
 
-| Model                       | Accuracy | Precision | Recall | F1   | CSR (strict) | CSR (with fuzzy) |
-|----------------------------|---------:|----------:|-------:|-----:|-------------:|-----------------:|
-| `gemma2-2b-it`             | TBD      | TBD       | TBD    | TBD  | TBD          | TBD              |
-| `llama3.2-3b-instruct`     | TBD      | TBD       | TBD    | TBD  | TBD          | TBD              |
-| `qwen2.5-7b-instruct-4bit` | TBD      | TBD       | TBD    | TBD  | TBD          | TBD              |
+| Model                        | Accuracy | Precision | Recall | F1     | CSR (strict) | CSR (with fuzzy) |
+|-----------------------------|---------:|----------:|-------:|-------:|-------------:|-----------------:|
+| `gemma2-2b-it`              |   0.883  |    0.833  |  0.957 |  0.891 |  0.711 (225) |    0.711 (225)   |
+| `llama3.2-3b-instruct`      |   0.881  |    0.848  |  0.928 |  0.886 |  0.766 (218) |    0.766 (218)   |
+| `qwen2.5-7b-instruct-4bit`  | **0.951**|  **1.000**|  0.902 |**0.949**|**0.858 (212)**|  **0.858 (212)** |
 
-- **Accuracy / Precision / Recall / F1** are computed on the binary tool-needed task (positive class = "tool needed").
-- **CSR (Correct Selection Rate)** is computed only over rows where the gold answer requires a tool **and** the model said `tool_needed=true` — among those, the fraction with `predicted_tool == gold_tool`.
-- **Strict** CSR counts only exact-match (after case-folding); **with fuzzy** additionally credits matches found by `rapidfuzz` at threshold ≥ 90. We track the fuzzy delta because the brief explicitly forbids silently using fuzzy matching.
+Auxiliary diagnostics (from `metrics_<model>.json`):
+
+| Model                       | Malformed JSON | Fuzzy matches used | "Unknown tool" predictions |
+|----------------------------|---------------:|-------------------:|---------------------------:|
+| `gemma2-2b-it`             | 0              | 0                  | 10                         |
+| `llama3.2-3b-instruct`     | 0              | 1                  | 15                         |
+| `qwen2.5-7b-instruct-4bit` | 0              | 0                  | 0                          |
+
+**Reading the table:**
+
+- **Qwen 2.5 7B (4-bit) is the clear winner** on every metric. Notably it achieves **perfect precision (1.000)** — across all 235 negative queries it never once said `tool_needed=true`. It pays for that with slightly lower recall (0.902) than the smaller models, meaning it is more conservative about invoking tools.
+- **Gemma 2B has the highest recall (0.957) but the lowest precision (0.833)**: it is the most eager of the three to invoke a tool, including on knowledge questions that need none. F1 ends up nearly identical to Llama because the precision/recall trade-off is roughly symmetric.
+- **Llama 3.2 3B sits between the two on binary metrics** but its CSR is **5.5 percentage points higher than Gemma's** (0.766 vs 0.711). When Llama does say "tool needed", it picks the right tool more often, even though it triggers tool use slightly less frequently.
+- **CSR-strict equals CSR-with-fuzzy for every model** — fuzzy normalization rescued at most one prediction (Llama). The headline tool-selection numbers therefore reflect exact-match performance and are not propped up by fuzzy fallback. This was tracked deliberately to satisfy the brief's requirement.
+- **Zero malformed JSON across all three models.** The single shared prompt with two worked examples and the explicit "Output ONLY valid JSON" instruction was sufficient to get parseable output without any model-specific tweaks.
+- **Hallucinated tool names**: Gemma named a non-existent tool 10 times, Llama 15 times, Qwen never. This pattern matches general findings that larger instruction-tuned models adhere more reliably to closed-vocabulary outputs.
 
 ## 5. Error analysis
 
-> Pull 3–5 examples per model from `results/predictions_<model>.csv` after the run. Categories to fill in:
+We sampled three representative failures per model from `results/predictions_<model>.csv`. Most failures are **plausibly wrong** rather than nonsense — they reveal overlapping tool semantics in the MetaTool benchmark itself, not just model weakness.
 
-For each model, include:
+### `gemma2-2b-it`
 
-- **Malformed JSON** — example raw response, what went wrong (e.g. trailing prose, markdown fences, hallucinated keys).
-- **Wrong-tool selection** — query, gold tool, predicted tool, plausible cause (e.g. confusion between two similar tools).
-- **False positive on tool-needed** — query that should be answerable from general knowledge but the model invoked a tool anyway.
-- **False negative on tool-needed** — query that clearly needs a tool but the model declined.
+| Query (truncated) | Gold tool | Predicted tool | Cause |
+|---|---|---|---|
+| "Any suggestions for quick and easy dinner ideas?" | `DietTool` | `ProductSearch` | Topic-confusion: "dinner ideas" → "products". Misses that `DietTool` is the recipe-and-meal tool. |
+| "I need a unique and catchy domain name … to use specifically for showcasing my portfolio of … photographs" | `URLTool` | `WebsiteTool` | Both tools are domain-related. The model latched onto "showcasing portfolio" and chose the website-builder, but the gold task is domain-name selection (`URLTool`). |
+| "Find a pet-friendly apartment in Chicago…" | `HouseRentingTool` | `TripTool` | `TripTool`'s description includes "accommodation bookings" — the model conflates short-term travel with long-term renting. This same confusion appears across all three models. |
 
-Cell 6 of the notebook prints each model's failure tallies and a sample of wrong-tool rows to seed this section.
+### `llama3.2-3b-instruct`
+
+| Query (truncated) | Gold tool | Predicted tool | Cause |
+|---|---|---|---|
+| "Why is it so difficult to find a rental property in Montreal? Help me find one!" | `HouseRentingTool` | `TripTool` | Same rental↔travel confusion as Gemma. |
+| "Find a pet-friendly apartment in Chicago…" | `HouseRentingTool` | `TripTool` | Same. |
+| "Does Best Buy happen to have discounts on their latest laptops?" | `Discount` | NaN (predicted false-negative) | Llama incorrectly classified this as not needing a tool. The query needs the `Discount` tool to look up real-time coupon codes — a recall failure. |
+
+### `qwen2.5-7b-instruct-4bit`
+
+| Query (truncated) | Gold tool | Predicted tool | Cause |
+|---|---|---|---|
+| "Paraphrase my resume to emphasize my skills…" | `PolishTool` | `ResumeTool` | Both are valid: `ResumeTool` is the resume-feedback tool; `PolishTool` is the general rewriting/paraphrasing tool. Qwen picked the topically-closer one but the gold expects the action-closer one. Arguably an annotation-ambiguity issue. |
+| "Scientific research paper about COVID-19 published recently, can you find it from a reputable medical journal's website?" | `PDF&URLTool` | `ResearchFinder` | `ResearchFinder` is *the* academic-paper-search tool — Qwen's prediction is arguably **more correct than the gold label**. The benchmark labels this as `PDF&URLTool` (PDF interaction) which seems to assume the user already has the URL. |
+| "Help me locate startups that are seeking buyers." | `ProductSearch` | `CompanyInfoTool` | `CompanyInfoTool` describes "obtain relevant information about global companies" — a defensible match. Gold expects `ProductSearch`, which the model didn't see as a fit because "startups" reads as companies, not products. |
+
+**Cross-cutting themes:**
+
+1. **`TripTool` vs `HouseRentingTool` is a systematic trap.** Every model picked `TripTool` for long-term rental queries because its description mentions "accommodation". Worth flagging to MetaTool maintainers.
+2. **Polish vs Resume vs Research collisions.** When a query has both a topic (resume, research paper) and an action (polish, find), models tend to anchor on the topic.
+3. **No malformed JSON anywhere.** The prompt's explicit schema + two examples generalized cleanly across all three model families.
 
 ## 6. Limitations
 
