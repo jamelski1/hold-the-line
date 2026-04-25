@@ -4,9 +4,8 @@ data/all_clean_data.csv
 data/MetaTool/
 # data/sampled_data.csv is the assignment deliverable — keep it tracked.
 
-# Results — keep summary.csv (final headline numbers); ignore bulky per-row artifacts.
-results/predictions_*.csv
-results/metrics_*.json
+# Results — track the deliverable-relevant ones; only ignore the raw
+# malformed-response logs (which can be large and aren't a deliverable).
 results/malformed_*.jsonl
 
 # Python
