@@ -21,7 +21,7 @@ A single prompt template is shared across all three models. The model is the onl
 The full template lives in `src/prompts.py`. Rendered for a query, it concatenates:
 
 1. A short two-sentence task definition for both sub-tasks.
-2. A numbered list of **all 48 tools** with their verbatim descriptions from `big_tool_des.json`.
+2. A numbered list of **all 47 tools** with their verbatim descriptions from `big_tool_des.json`.
 3. Two worked examples — one tool-needed, one not — that demonstrate the JSON output format.
 4. A strict "output ONLY valid JSON" instruction with the exact schema:
    ```json
@@ -72,7 +72,7 @@ Cell 6 of the notebook prints each model's failure tallies and a sample of wrong
 ## 6. Limitations
 
 - **Synthetic negatives.** The MetaTool benchmark as packaged in `all_clean_data.csv` does not ship a non-tool subset. We synthesized ~240 negatives by hand-authoring knowledge/reasoning queries that lie clearly outside the 48-tool scope. This means the binary metrics measure *separability of our curated negatives from MetaTool positives*, not separability against the natural distribution of non-tool queries a user would issue.
-- **48 tools in every prompt.** No retrieval over tool descriptions; the full list is included in every request. Token-budget pressure (~1.5–2 K tokens of tool list + query) may disadvantage the smallest model.
+- **47 tools in every prompt.** No retrieval over tool descriptions; the full list is included in every request. Token-budget pressure (~1.5–2 K tokens of tool list + query) may disadvantage the smallest model.
 - **Single prompt template.** No prompt-engineering search per model. A model-specific prompt could close part of the gap we observe.
 - **Greedy decoding, single sample per query.** No self-consistency or temperature sweeps.
 - **4-bit quantization for Qwen 7B.** Some accuracy loss vs full-precision is expected; we did not run an unquantized comparison due to T4 VRAM limits.
