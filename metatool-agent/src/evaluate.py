@@ -34,23 +34,47 @@ def compute_metrics(predictions_df: pd.DataFrame) -> dict:
     )
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred, labels=[False, True]).ravel()
 
-    # CSR computed two ways: strict (exact-match only) and including-fuzzy.
-    tool_required = df[df["requires_tool"] & df["pred_tool_needed_filled"]]
-    n_csr_eligible = len(tool_required)
+    # CSR is reported two ways:
+    #
+    #  csr_paper:   correct_tool_selections / all gold-positive samples.
+    #               Matches the MetaTool paper / assignment definition. A query
+    #               where gold required a tool but the model said "no tool"
+    #               counts as an incorrect selection.
+    #
+    #  csr_attempted: correct_tool_selections / (gold-positive AND model said yes).
+    #                 More diagnostic: "when the model decides to invoke a tool,
+    #                 how often does it pick the right one?" Decouples tool-
+    #                 selection ability from binary-classification ability.
+    #
+    # Both are reported in strict (exact-match) and with-fuzzy variants.
+    n_gold_positive = int(df["requires_tool"].sum())
+    tool_attempted = df[df["requires_tool"] & df["pred_tool_needed_filled"]]
+    n_csr_attempted = len(tool_attempted)
 
-    if n_csr_eligible == 0:
-        csr_strict = float("nan")
-        csr_with_fuzzy = float("nan")
+    if n_csr_attempted == 0:
+        csr_attempted_strict = float("nan")
+        csr_attempted_with_fuzzy = float("nan")
+        n_correct_strict = 0
+        n_correct_with_fuzzy = 0
     else:
-        gold = tool_required["gold_tool"].astype(str).str.strip()
-        pred = tool_required["pred_tool_name"].fillna("").astype(str).str.strip()
-        normalization = tool_required["normalization"].astype(str)
+        gold = tool_attempted["gold_tool"].astype(str).str.strip()
+        pred = tool_attempted["pred_tool_name"].fillna("").astype(str).str.strip()
+        normalization = tool_attempted["normalization"].astype(str)
 
         exact_correct = (gold == pred) & (normalization == "exact")
         any_correct = (gold == pred) & (normalization.isin(["exact", "fuzzy"]))
 
-        csr_strict = float(exact_correct.sum() / n_csr_eligible)
-        csr_with_fuzzy = float(any_correct.sum() / n_csr_eligible)
+        n_correct_strict = int(exact_correct.sum())
+        n_correct_with_fuzzy = int(any_correct.sum())
+        csr_attempted_strict = float(n_correct_strict / n_csr_attempted)
+        csr_attempted_with_fuzzy = float(n_correct_with_fuzzy / n_csr_attempted)
+
+    if n_gold_positive == 0:
+        csr_paper_strict = float("nan")
+        csr_paper_with_fuzzy = float("nan")
+    else:
+        csr_paper_strict = float(n_correct_strict / n_gold_positive)
+        csr_paper_with_fuzzy = float(n_correct_with_fuzzy / n_gold_positive)
 
     n_fuzzy = int((df["normalization"] == "fuzzy").sum())
     n_unknown_tool = int((df["normalization"] == "unknown_tool").sum())
@@ -63,9 +87,16 @@ def compute_metrics(predictions_df: pd.DataFrame) -> dict:
         "precision": float(precision),
         "recall": float(recall),
         "f1": float(f1),
-        "csr_strict": csr_strict,
-        "csr_with_fuzzy": csr_with_fuzzy,
-        "csr_eligible": n_csr_eligible,
+        # MetaTool-paper CSR: denominator = all gold positives (a missed positive
+        # counts as an incorrect tool selection).
+        "csr": csr_paper_strict,
+        "csr_with_fuzzy": csr_paper_with_fuzzy,
+        # Diagnostic CSR: denominator = positives where the model attempted a tool.
+        # Decouples tool-selection ability from binary-classification ability.
+        "csr_attempted": csr_attempted_strict,
+        "csr_attempted_with_fuzzy": csr_attempted_with_fuzzy,
+        "csr_attempted_n": n_csr_attempted,
+        "n_correct_tool_selections": n_correct_strict,
         "confusion_matrix": {"tn": int(tn), "fp": int(fp), "fn": int(fn), "tp": int(tp)},
         "malformed_rate": n_malformed / n_total if n_total else 0.0,
         "regex_recovered_rate": n_regex_recovered / n_total if n_total else 0.0,
@@ -99,9 +130,11 @@ def write_summary(metrics_list: list[dict], out_path: Path) -> pd.DataFrame:
         "precision",
         "recall",
         "f1",
-        "csr_strict",
+        "csr",
         "csr_with_fuzzy",
-        "csr_eligible",
+        "csr_attempted",
+        "csr_attempted_n",
+        "n_correct_tool_selections",
         "malformed_rate",
         "fuzzy_match_count",
         "unknown_tool_count",

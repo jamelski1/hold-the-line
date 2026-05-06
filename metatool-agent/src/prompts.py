@@ -37,36 +37,38 @@ EXAMPLES = [
 def _pick_positive_example(tools: list[dict]) -> tuple[str, dict]:
     """Build a tool-needed example anchored to a real tool from the list.
 
-    We try to find a tool whose description plausibly matches a concrete query
-    (image generation, weather, calculator, translation, ...). If nothing
-    matches, fall back to a generic 'help me with X' query parameterized by
-    the first tool's description so the example is always self-consistent.
+    We match against tool *names* (more reliable than descriptions, which can
+    coincidentally contain unrelated keywords — e.g. MapTool's description
+    mentions 'images'). The candidate list below is ordered by preference; we
+    use the first one whose substring is a case-insensitive match against any
+    tool name. Falls back to the first tool with a description-derived query.
     """
+    # (name_substring, query, reasoning) — name_substring matched against tool NAME only.
     candidates = [
-        ("image", "Create an image of a sunset over the ocean.",
-         "Image generation requires a specialized image-creation tool."),
         ("weather", "What is the current weather in Tokyo right now?",
          "This needs real-time weather data, not general knowledge."),
-        ("translat", "Translate 'good morning' into Japanese.",
-         "Translation requires a translation tool for accuracy."),
-        ("calculat", "Compute 384 * 217 - 9821.",
-         "This arithmetic is best handled by a calculator tool."),
-        ("search", "Find recent news articles about renewable energy.",
-         "Real-time search results require a search tool."),
-        ("calendar", "Schedule a meeting with my team for next Friday at 2 PM.",
-         "Scheduling requires a calendar tool to create the event."),
-        ("email", "Send an email to alice@example.com with a project update.",
-         "Sending an email requires an email tool."),
+        ("chart", "Create a bar chart comparing quarterly sales for 2024.",
+         "Generating a chart requires a chart-rendering tool."),
+        ("notes", "Add 'buy groceries' to my reminders for tomorrow.",
+         "Adding a reminder requires a notes/reminders tool."),
+        ("news", "Show me the top news stories about climate change today.",
+         "Real-time news requires a news tool, not general knowledge."),
+        ("finance", "What is Apple's current stock price?",
+         "Live stock data requires a finance tool."),
         ("map", "Give me driving directions from San Francisco to Los Angeles.",
          "Navigation requires a maps/directions tool."),
-        ("code", "Run this Python snippet and tell me the output: print(2**10)",
-         "Code execution requires a code-running tool, not reasoning."),
+        ("podcast", "Find a podcast episode about machine learning ethics.",
+         "Searching podcasts requires a podcast tool."),
+        ("music", "Build me a workout playlist of high-energy rock songs.",
+         "Creating playlists requires a music tool."),
+        ("game", "Recommend a strategy game similar to Civilization.",
+         "Game recommendations require a game-info tool."),
+        ("research", "Find recent academic papers on transformer architectures.",
+         "Searching academic papers requires a research tool."),
     ]
-    for keyword, query, reasoning in candidates:
+    for substr, query, reasoning in candidates:
         for t in tools:
-            desc = (t.get("description") or "").lower()
-            name = t["name"].lower()
-            if keyword in desc or keyword in name:
+            if substr in t["name"].lower():
                 return query, {
                     "tool_needed": True,
                     "tool_name": t["name"],

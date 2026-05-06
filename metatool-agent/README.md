@@ -3,7 +3,7 @@
 Prompt-based tool-selection agent evaluated on the [MetaTool benchmark](https://arxiv.org/abs/2310.03128) for a graduate assignment. Compares three open-source instruction-tuned LLMs on:
 
 1. **Tool Usage Awareness** — binary: does the query need a tool at all?
-2. **Tool Selection** — if so, which of the 48 tools is correct?
+2. **Tool Selection** — if so, which of the 47 tools is correct?
 
 The agent is a single prompt sent to each model. No fine-tuning, no retrieval, no chain-of-thought ensembles.
 

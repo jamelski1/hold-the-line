@@ -1,13 +1,23 @@
-torch==2.4.0
-transformers==4.45.2
-accelerate==1.0.1
-bitsandbytes==0.44.1
-sentencepiece==0.2.0
-protobuf==4.25.5
-huggingface_hub==0.25.2
-pandas==2.2.3
-numpy==1.26.4
-scikit-learn==1.5.2
-rapidfuzz==3.10.1
-tqdm==4.66.5
-ipywidgets==8.1.5
+# Minimum-version pins. These are kept loose so the same file works on
+# Colab (which ships modern torch/numpy/pandas) and a clean local install.
+# For a strictly locked local environment, use `pip-compile` to produce a
+# fully-pinned lock file from these.
+
+transformers>=4.45,<5
+accelerate>=1.0
+bitsandbytes>=0.44
+sentencepiece>=0.2
+rapidfuzz>=3.10
+huggingface_hub>=0.25
+# torch is intentionally NOT pinned — install it through the runtime/CUDA
+# combination of your environment. On Colab, torch is already installed.
+# Locally:
+#   pip install "torch>=2.4" --index-url https://download.pytorch.org/whl/cu121
+torch>=2.4
+# pandas / numpy / scikit-learn / tqdm / ipywidgets ship with Colab and most
+# scientific Python stacks; pinned only to a known-good lower bound.
+pandas>=2.0
+numpy>=1.26
+scikit-learn>=1.5
+tqdm>=4.66
+ipywidgets>=8

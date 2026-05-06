@@ -1,13 +1,11 @@
 # Data files (downloaded at runtime)
 data/big_tool_des.json
 data/all_clean_data.csv
-data/sampled_data.csv
 data/MetaTool/
+# data/sampled_data.csv is the assignment deliverable — keep it tracked.
 
-# Results — keep structure, ignore generated artifacts
-results/predictions_*.csv
-results/metrics_*.json
-results/summary.csv
+# Results — track the deliverable-relevant ones; only ignore the raw
+# malformed-response logs (which can be large and aren't a deliverable).
 results/malformed_*.jsonl
 
 # Python
